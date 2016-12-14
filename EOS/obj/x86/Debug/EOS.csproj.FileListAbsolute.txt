@@ -10,3 +10,15 @@ F:\personal\vs2010\EOS\EOS\obj\x86\Debug\EOS.csprojResolveAssemblyReference.cach
 F:\personal\vs2010\EOS\EOS\bin\Debug\Newtonsoft.Json.dll
 F:\personal\vs2010\EOS\EOS\bin\Debug\Newtonsoft.Json.pdb
 F:\personal\vs2010\EOS\EOS\bin\Debug\Newtonsoft.Json.xml
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.exe
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.pdb
+F:\GIT\EOS\EOS\bin\Debug\EOS.exe
+F:\GIT\EOS\EOS\bin\Debug\EOS.pdb
+F:\GIT\EOS\EOS\bin\Debug\Newtonsoft.Json.dll
+F:\GIT\EOS\EOS\bin\Debug\Newtonsoft.Json.pdb
+F:\GIT\EOS\EOS\bin\Debug\Newtonsoft.Json.xml
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.csprojResolveAssemblyReference.cache
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.Main.resources
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.StartUp.resources
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.Properties.Resources.resources
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.csproj.GenerateResource.Cache

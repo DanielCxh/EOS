@@ -150,29 +150,45 @@ namespace EOS
         {
             if (false == FreePanel.Visible)
             {
-                FreePanel.Show();
+                //FreePanel.Show();
             }
 
-
+            /*
             FreePanel.Location = new Point(0, 50);
             //FreePanel.BackColor = Color.FromArgb(0, Color.Green);
-            FreePanel.BackColor = Color.FromArgb(50, 0, 200, 50);
+            FreePanel.BackColor = Color.FromArgb(80, 0, 255, 0);
             FreePanel.Width =  e.SplitX;
-            FreePanel.Height = SplitContainer.Panel1.Height;            
+            FreePanel.Height = SplitContainer.Panel1.Height;
+             * */
         }
 
         private void ProjectTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             string strExt = "";
 
-            if (e.Node.Text.EndsWith(".tree"))
+            if (e.Node.FullPath.EndsWith(".png") || e.Node.FullPath.EndsWith(".jpg"))
             {
-                strExt = "Tree file";
-            }
-            
-            StatusBarInfo.Text = e.Node.Text +":"+e.Node.FullPath +":"+ strExt;
-            
-        }
+               // Graphics g = this.CreateGraphics();
 
+                Image img = Image.FromFile(ProjMgt.GetInstance().GetProjectResLoc() +"\\" + e.Node.FullPath);
+                //Graphics g = Graphics.FromImage(img);
+
+                Console.WriteLine("width:" + img.Width + "height:" + img.Height);
+
+                Graphics g = SplitContainer.Panel2.CreateGraphics();
+                g.Clear(System.Drawing.Color.White);
+
+                int locX = (SplitContainer.Panel2.Width - img.Width) / 2;
+                int locY = (SplitContainer.Panel2.Height - img.Height) / 2;
+
+                g.DrawImage(img, locX, locY, img.Width, img.Height);
+
+                g.Save();
+
+                strExt = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.FullPath;
+            }
+
+            StatusBarInfo.Text = strExt;
+        }
     }
 }

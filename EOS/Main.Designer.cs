@@ -43,8 +43,8 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
             this.ProjectTree = new System.Windows.Forms.TreeView();
-            this.FreePanel = new System.Windows.Forms.Panel();
             this.ProjTreeImgList = new System.Windows.Forms.ImageList(this.components);
+            this.FreePanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResizeImg)).BeginInit();
@@ -210,18 +210,18 @@
             this.ProjectTree.TabIndex = 0;
             this.ProjectTree.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ProjectTree_NodeMouseDoubleClick);
             // 
+            // ProjTreeImgList
+            // 
+            this.ProjTreeImgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.ProjTreeImgList.ImageSize = new System.Drawing.Size(16, 16);
+            this.ProjTreeImgList.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // FreePanel
             // 
             this.FreePanel.Location = new System.Drawing.Point(0, 0);
             this.FreePanel.Name = "FreePanel";
             this.FreePanel.Size = new System.Drawing.Size(10, 10);
             this.FreePanel.TabIndex = 0;
-            // 
-            // ProjTreeImgList
-            // 
-            this.ProjTreeImgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.ProjTreeImgList.ImageSize = new System.Drawing.Size(16, 16);
-            this.ProjTreeImgList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // Main
             // 

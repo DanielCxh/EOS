@@ -2,27 +2,31 @@
 using System.Windows.Forms;
 using System.IO;
 
+using System.Collections;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace EOS
 {
     class ProjectJosn
     {
         [JsonProperty(PropertyName = "project_info")]
-        public ProjectInfoJson projectInfo { get; set; }
+        public ProjectInfoJson ProjectInfo { get; set; }
 
         [JsonProperty(PropertyName = "project_cfg")]
-        public ProjectCfgJson projectCfg { get; set; }
+        public ProjectCfgJson ProjectCfg { get; set; }
     }
 
     class ProjectInfoJson
     {
         [JsonProperty(PropertyName = "project_name")]
-        public string projectName { get; set; }
+        public string ProjectName { get; set; }
 
         [JsonProperty(PropertyName = "project_res")]
-        public string projectLoc { get; set; }
+        public string ProjectLoc { get; set; }
     }
 
     class ProjectCfgJson
@@ -115,17 +119,33 @@ namespace EOS
             return iScreenHeight;
         }
 
-        private void readProjFile(string strPath)
+        /// <summary>
+        /// Get  file information by file path.
+        /// </summary>
+        private string getFileInfo(string strPath)
         {
             StreamReader sr = new StreamReader(strPath, System.Text.Encoding.Default);
+
+            if (null == sr)
+            {
+                return "";
+            }
+
             string line;
 
-            string json = "";
+            string strInfo = "";
 
             while ((line = sr.ReadLine()) != null)
             {
-                json = json + line.Trim();
+                strInfo = strInfo + line.Trim();
             }
+
+            return strInfo;
+        }
+
+        private void readProjFile(string strPath)
+        {
+            string json = getFileInfo(strPath);
 
             Console.WriteLine(json);
 
@@ -141,13 +161,49 @@ namespace EOS
                 return;
             }
 
-            strProjectName   = job.projectInfo.projectName;
-            strProjectResLoc = job.projectInfo.projectLoc;
+            strProjectName   = job.ProjectInfo.ProjectName;
+            strProjectResLoc = job.ProjectInfo.ProjectLoc;
 
-            iScreenWidth = Int16.Parse(job.projectCfg.screenWidth);
-            iScreenHeight = Int16.Parse(job.projectCfg.screenHeight);
+            iScreenWidth = Int16.Parse(job.ProjectCfg.screenWidth);
+            iScreenHeight = Int16.Parse(job.ProjectCfg.screenHeight);
 
             readProjectRes(strProjectResLoc);
+        }
+
+        private string getJsonStringByKey(string strJson, string key)
+        {
+            string strVal = "";
+
+            JObject o = JObject.Parse(strJson);
+
+            IEnumerable<JProperty> properties = o.Properties();
+
+            foreach (JProperty item in properties)
+            {
+                if (0 == item.Name.ToString().CompareTo(key))
+                {
+                    strVal = item.Value.ToString();
+                    break;
+                }
+            }
+
+            return  strVal;
+        }
+
+        private ArrayList getJsonProperties(string strJson)
+        {
+            ArrayList arrList = new ArrayList();
+
+            JObject o = JObject.Parse(strJson);
+
+            IEnumerable<JProperty> properties = o.Properties();
+
+            foreach (JProperty item in properties)
+            {
+                arrList.Add(item.Name.ToString());
+            }
+
+            return arrList;
         }
 
         public void SetProjectTree(TreeView tv)
@@ -163,10 +219,13 @@ namespace EOS
                 return;
             }
 
-            scanFolder(m_projectTree.Nodes, strPath);
+            scanFolderToAddNode(m_projectTree.Nodes, strPath);
         }
 
-        private void scanFolder(TreeNodeCollection node, string strFolderPath)
+        /// <summary>
+        /// Scan the folder and add the node
+        /// </summary>
+        private void scanFolderToAddNode(TreeNodeCollection node, string strFolderPath)
         {
             DirectoryInfo TheFolder = new DirectoryInfo(strFolderPath);
 
@@ -175,13 +234,129 @@ namespace EOS
                 TreeNode newNode = new TreeNode(NextFolder.Name);
                 
                 node.Add(newNode);
-                scanFolder(newNode.Nodes, NextFolder.FullName);
+                scanFolderToAddNode(newNode.Nodes, NextFolder.FullName);
             }
 
             foreach (FileInfo NextFile in TheFolder.GetFiles())
             {
-                node.Add(new TreeNode(NextFile.Name));
+                TreeNode newNode = new TreeNode(NextFile.Name);
+                node.Add(newNode);
+
+                decodeProject(newNode, NextFile.FullName);
             }
+        }
+
+        private void decodeProject(TreeNode parentNode, string filePath)
+        {
+            if (0 == filePath.CompareTo(""))
+            {
+                return;
+            }
+
+            if (false == isValidResourceFile(filePath))
+            {
+                return;
+            }
+
+            string file = getFileInfo(filePath);
+
+            if (0 == file.CompareTo(""))
+            {
+                return;
+            }
+
+            // Decode file according json
+            ArrayList arrList = getJsonProperties(file);
+
+            if (true == isValidResourceFile(filePath))
+            {
+                foreach (string str in arrList)
+                {
+                    TreeNode newNode = new TreeNode(str);
+                    parentNode.Nodes.Add(newNode);
+
+                    if (parentNode.FullPath.EndsWith(".wgt"))
+                    {
+                        decodeWgtSkeleton(newNode, file, str);
+                    }
+                }
+            }
+  
+        }
+
+        private void decodeWgtSkeleton(TreeNode parentNode, string jsonInfo, string key)
+        {
+            if (0 == jsonInfo.CompareTo("") || 0 == key.CompareTo(""))
+            {
+                return;
+            }
+
+            string strInfo = getJsonStringByKey(jsonInfo, key);
+
+            ArrayList arrList = getJsonProperties(strInfo);
+
+            //if (true == isValidResourceFile(filePath))
+            //{
+                foreach (string str in arrList)
+                {
+                    TreeNode newNode = new TreeNode(str);
+                    parentNode.Nodes.Add(newNode);
+                }
+            //}
+        }
+
+        private void decodeWgtContent()
+        {
+
+        }
+
+        private void decodeTreeContent()
+        {
+
+        }
+
+        private void decodeResContent()
+        {
+
+        }
+
+
+        /// <summary>
+        /// Check current file type is valid or not.
+        /// </summary>
+        private bool isValidResourceFile(string filePath)
+        {
+            bool bRst = false;
+
+            if (filePath.EndsWith(".wgt") || filePath.EndsWith(".tree") || filePath.EndsWith(".res"))
+            {
+                bRst = true;
+            }
+
+            return bRst;
+        }
+
+        
+        /// <summary>
+        /// Dynamic key
+        /// </summary>
+        /// <param name="jObject">json string</param>
+        /// <returns>First value of json object</returns>
+        private string getJsonValue(string strJson)
+        {
+            string strResult;
+            JObject jo = JObject.Parse(strJson);
+            string[] values = jo.Properties().Select(item => item.Value.ToString()).ToArray();
+            if (values == null)
+            {
+                strResult = "";
+            }
+            else
+            {
+                strResult = values[0];
+            }
+
+            return strResult;
         }
     }
 }

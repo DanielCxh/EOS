@@ -171,9 +171,6 @@ namespace EOS
                // Graphics g = this.CreateGraphics();
 
                 Image img = Image.FromFile(ProjMgt.GetInstance().GetProjectResLoc() +"\\" + e.Node.FullPath);
-                //Graphics g = Graphics.FromImage(img);
-
-                Console.WriteLine("width:" + img.Width + "height:" + img.Height);
 
                 Graphics g = SplitContainer.Panel2.CreateGraphics();
                 g.Clear(System.Drawing.Color.White);
@@ -186,8 +183,15 @@ namespace EOS
                 g.Save();
 
                 strExt = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.FullPath;
-            }
 
+            }
+            else if (CfgRes.IsColorResNode(e.Node))
+            {
+                Console.WriteLine(e.Node.FullPath);
+                ResEdit re = new ResEdit(ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.Parent.FullPath);
+                re.Show();
+            }
+            
             StatusBarInfo.Text = strExt;
         }
     }

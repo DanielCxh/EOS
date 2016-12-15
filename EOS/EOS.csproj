@@ -53,13 +53,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapImg.cs" />
+    <Compile Include="CfgRes.cs" />
+    <Compile Include="CfgWgt.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="DrawMgt.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProjLoading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjLoading.Designer.cs">
+      <DependentUpon>ProjLoading.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProjMgt.cs" />
+    <Compile Include="ResData.cs" />
+    <Compile Include="ResEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResEdit.Designer.cs">
+      <DependentUpon>ResEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="StartUp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +89,9 @@
     <Compile Include="StatusBarMgt.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResEdit.resx">
+      <DependentUpon>ResEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartUp.resx">
       <DependentUpon>StartUp.cs</DependentUpon>

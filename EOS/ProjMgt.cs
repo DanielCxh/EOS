@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.IO;
 
 using System.Collections;
 
@@ -8,6 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace EOS
 {
@@ -40,10 +41,14 @@ namespace EOS
 
     public class ProjMgt
     {
-        private volatile static ProjMgt m_instance = null;
+        const string FILE_TYPE_WGT = ".wgt";
+        const string FILE_TYPE_TREE = ".tree";
+        const string FILE_TYPE_RESOURCE = ".res";
+
+        private static ProjMgt m_instance = null;
         private static readonly object lockHelper = new object();
 
-        private string crtProject = "";
+        private string crtProjectPath = "";
 
         private string strProjectName;
         private string strProjectResLoc;
@@ -82,18 +87,27 @@ namespace EOS
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string strFile = openFileDialog.FileName;
+                string strFilePath = openFileDialog.FileName;
 
-                if (0 != strFile.CompareTo(""))
+                if (0 != strFilePath.CompareTo(""))
                 {
-                    if (0 == strFile.CompareTo(crtProject))
+                    if (0 == strFilePath.CompareTo(crtProjectPath))
                     {
-                        Console.WriteLine(strFile + "has opened");
+                        Console.WriteLine(strFilePath + "has opened");
                     }
                     else
                     {
-                        crtProject = strFile;
-                        readProjFile(strFile);
+                        ProjLoading projLoading = new ProjLoading();
+
+                        projLoading.Show();
+
+                        crtProjectPath = strFilePath;
+
+                        initProjTree(strFilePath);
+
+                        loadProjContent();
+
+                        projLoading.Close();
                     }
                 }
             }
@@ -119,91 +133,42 @@ namespace EOS
             return iScreenHeight;
         }
 
-        /// <summary>
-        /// Get  file information by file path.
-        /// </summary>
-        private string getFileInfo(string strPath)
+        private bool readProjFile(string strPath)
         {
-            StreamReader sr = new StreamReader(strPath, System.Text.Encoding.Default);
+            bool bRst = false;
 
-            if (null == sr)
-            {
-                return "";
-            }
-
-            string line;
-
-            string strInfo = "";
-
-            while ((line = sr.ReadLine()) != null)
-            {
-                strInfo = strInfo + line.Trim();
-            }
-
-            return strInfo;
-        }
-
-        private void readProjFile(string strPath)
-        {
-            string json = getFileInfo(strPath);
-
-            Console.WriteLine(json);
+            string strJsonContent = Common.GetFileContent(strPath);
 
             ProjectJosn job = null;
 
             try
             {
-                job = (ProjectJosn)JsonConvert.DeserializeObject(json, typeof(ProjectJosn));
+                /* Deserialize project object */
+                job = (ProjectJosn)JsonConvert.DeserializeObject(strJsonContent, typeof(ProjectJosn));
+
+                /* Initialize project information */
+                strProjectName = job.ProjectInfo.ProjectName;
+                strProjectResLoc = job.ProjectInfo.ProjectLoc;
+
+                iScreenWidth = Int16.Parse(job.ProjectCfg.screenWidth);
+                iScreenHeight = Int16.Parse(job.ProjectCfg.screenHeight);
+
+                bRst = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine("e:" + e.Message);
-                return;
+                Console.WriteLine("[E]" + e.Message);
+
+                strProjectName = "";
+                strProjectResLoc = "";
+
+                iScreenWidth = 0;
+                iScreenHeight = 0;
+
+                return false;
             }
 
-            strProjectName   = job.ProjectInfo.ProjectName;
-            strProjectResLoc = job.ProjectInfo.ProjectLoc;
-
-            iScreenWidth = Int16.Parse(job.ProjectCfg.screenWidth);
-            iScreenHeight = Int16.Parse(job.ProjectCfg.screenHeight);
-
-            readProjectRes(strProjectResLoc);
-        }
-
-        private string getJsonStringByKey(string strJson, string key)
-        {
-            string strVal = "";
-
-            JObject o = JObject.Parse(strJson);
-
-            IEnumerable<JProperty> properties = o.Properties();
-
-            foreach (JProperty item in properties)
-            {
-                if (0 == item.Name.ToString().CompareTo(key))
-                {
-                    strVal = item.Value.ToString();
-                    break;
-                }
-            }
-
-            return  strVal;
-        }
-
-        private ArrayList getJsonProperties(string strJson)
-        {
-            ArrayList arrList = new ArrayList();
-
-            JObject o = JObject.Parse(strJson);
-
-            IEnumerable<JProperty> properties = o.Properties();
-
-            foreach (JProperty item in properties)
-            {
-                arrList.Add(item.Name.ToString());
-            }
-
-            return arrList;
+            return bRst;
         }
 
         public void SetProjectTree(TreeView tv)
@@ -211,7 +176,7 @@ namespace EOS
             m_projectTree = tv;
         }
 
-        private void readProjectRes(string strPath)
+        private void initProjSkeleton(string strPath)
         {
             if (0 == strPath.CompareTo(""))
             {
@@ -242,23 +207,24 @@ namespace EOS
                 TreeNode newNode = new TreeNode(NextFile.Name);
                 node.Add(newNode);
 
-                decodeProject(newNode, NextFile.FullName);
+                /* Analyze project files */
+                analyzeProjFileToAddNode(newNode, NextFile.FullName);
             }
         }
 
-        private void decodeProject(TreeNode parentNode, string filePath)
+        private void analyzeProjFileToAddNode(TreeNode parentNode, string filePath)
         {
             if (0 == filePath.CompareTo(""))
             {
                 return;
             }
 
-            if (false == isValidResourceFile(filePath))
+            if (false == isValidCfgFile(filePath))
             {
                 return;
             }
 
-            string file = getFileInfo(filePath);
+            string file = Common.GetFileContent(filePath);
 
             if (0 == file.CompareTo(""))
             {
@@ -266,43 +232,46 @@ namespace EOS
             }
 
             // Decode file according json
-            ArrayList arrList = getJsonProperties(file);
+            ArrayList arrList = Common.GetJsonProperties(file);
 
-            if (true == isValidResourceFile(filePath))
+            if (true == isValidCfgFile(filePath))
             {
                 foreach (string str in arrList)
                 {
                     TreeNode newNode = new TreeNode(str);
-                    parentNode.Nodes.Add(newNode);
 
                     if (parentNode.FullPath.EndsWith(".wgt"))
                     {
-                        decodeWgtSkeleton(newNode, file, str);
+                        initWgtSkeleton(newNode, file, str);
                     }
+                    else
+                    {
+                        newNode.ForeColor = Color.Yellow;
+                    }
+
+                    parentNode.Nodes.Add(newNode);
                 }
             }
   
         }
 
-        private void decodeWgtSkeleton(TreeNode parentNode, string jsonInfo, string key)
+        private void initWgtSkeleton(TreeNode parentNode, string jsonInfo, string key)
         {
             if (0 == jsonInfo.CompareTo("") || 0 == key.CompareTo(""))
             {
                 return;
             }
 
-            string strInfo = getJsonStringByKey(jsonInfo, key);
+            string strInfo = Common.GetJsonValueByKey(jsonInfo, key);
 
-            ArrayList arrList = getJsonProperties(strInfo);
+            ArrayList arrList = Common.GetJsonProperties(strInfo);
 
-            //if (true == isValidResourceFile(filePath))
-            //{
-                foreach (string str in arrList)
-                {
-                    TreeNode newNode = new TreeNode(str);
-                    parentNode.Nodes.Add(newNode);
-                }
-            //}
+            foreach (string str in arrList)
+            {
+                TreeNode newNode = new TreeNode(str);
+                newNode.ForeColor = Color.Red;
+                parentNode.Nodes.Add(newNode);
+            }
         }
 
         private void decodeWgtContent()
@@ -324,11 +293,18 @@ namespace EOS
         /// <summary>
         /// Check current file type is valid or not.
         /// </summary>
-        private bool isValidResourceFile(string filePath)
+        private bool isValidCfgFile(string filePath)
         {
             bool bRst = false;
 
-            if (filePath.EndsWith(".wgt") || filePath.EndsWith(".tree") || filePath.EndsWith(".res"))
+            if (0 == filePath.CompareTo(""))
+            {
+                return false;
+            }
+
+            if (filePath.EndsWith(".wgt")
+                || filePath.EndsWith(".tree")
+                || filePath.EndsWith(".res"))
             {
                 bRst = true;
             }
@@ -342,6 +318,7 @@ namespace EOS
         /// </summary>
         /// <param name="jObject">json string</param>
         /// <returns>First value of json object</returns>
+        /*
         private string getJsonValue(string strJson)
         {
             string strResult;
@@ -357,6 +334,180 @@ namespace EOS
             }
 
             return strResult;
+        }
+        */
+        public string GetNodeJsonValue(TreeNode node)
+        {
+            string strVal = "";
+
+            // Resource item
+            if (CfgRes.IsResNode(node))
+            {
+                // Full file content
+                string strContent = Common.GetFileContent(GetProjectResLoc() + "\\" + node.Parent.FullPath);
+
+                // Get color related content
+                string strJson = Common.GetJsonValueByKey(strContent, CfgRes.RES_TYPE_COLOR);
+
+                ArrayList arrL = Common.GetJsonProperties(strJson);
+
+                foreach (string sj in arrL)
+                {
+                    string ss = Common.GetJsonValueByKey(strJson, sj);
+
+                    Console.WriteLine("s" + ss);
+                    ColorJson job = null;
+
+                    try
+                    {
+                        job = (ColorJson)JsonConvert.DeserializeObject(ss, typeof(ColorJson));
+                        job.Title = sj;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("eee" + e.Message);
+                    }
+
+                    ResData.GetInstance().AddColor(job);
+                }
+
+                ArrayList c = ResData.GetInstance().GetColorList();
+
+                foreach (ColorJson col in c)
+                {
+                    Console.WriteLine(col.Title + ":"+ col.Format +":"+ col.Value[0].ToString());
+                }
+
+                
+                /*
+                RColor job = null;
+
+                try
+                {
+                    job = (RColor)JsonConvert.DeserializeObject(strJson, typeof(RColor));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("e:" + e.Message);
+                }
+                */
+                // Font
+
+                // Color
+
+                // String
+            }
+            // Tree item
+           // else if (node.Parent.FullPath.EndsWith(".tree"))
+            //{
+                // Tree node
+            //}
+          
+            return strVal;
+        }
+
+        private bool isWgtNode(TreeNode node)
+        {
+            bool bRst = false;
+
+            if (null == node.Parent || null == node.Parent.Parent)
+            {
+                return bRst;
+            }
+
+            if (node.Parent.Parent.FullPath.EndsWith(".wgt"))
+            {
+                bRst = true;
+            }
+
+            return bRst;
+        }
+
+        /* Initialize project tree */
+        private void initProjTree(string strPath)
+        {
+            bool bRst = readProjFile(strPath);
+
+            if (true == bRst && 0 != strProjectResLoc.CompareTo(""))
+            {
+                initProjSkeleton(strProjectResLoc);
+            }
+        }
+
+        /* Load all project content */
+        private void loadProjContent()
+        {
+            if (null == m_projectTree)
+            {
+                return;
+            }
+
+            foreach (TreeNode rootNode in m_projectTree.Nodes)
+            {
+                sacnEachNode(rootNode);
+            }
+        }
+
+        private TreeNode sacnEachNode(TreeNode rootNode)
+        {
+            TreeNode n = null;
+
+            foreach (TreeNode node in rootNode.Nodes)
+            {
+                // Leaf node
+                if (node.Nodes.Count <= 0)
+                {
+                    loadNode(node);
+                }
+                // Node with sub nodes
+                else
+                {
+                    sacnEachNode(node);
+                }
+            }
+
+            return n;
+        }
+
+        private void loadNode(TreeNode node)
+        {
+            if (CfgRes.IsResNode(node))
+            {
+               // Console.WriteLine("res::::" + node.FullPath);
+
+                loadResContent(node);
+            }
+            else if (CfgWgt.IsWgtNode(node))
+            {
+               // Console.WriteLine("wgt::::" + node.FullPath);
+            }
+            else
+            {
+               // Console.WriteLine("ote::::" + node.FullPath);
+            }
+        }
+
+        /* Load resouece file to RAM */
+        private void loadResContent(TreeNode node)
+        {
+            if (CfgRes.IsColorResNode(node))
+            {
+                //ColorData cd = new ColorData();
+                //ResData.GetInstance().AddColor();
+                ResData.SyncResFile(strProjectResLoc + "\\" + node.Parent.FullPath, CfgRes.ResType.COLOR);
+            }
+        }
+
+        /* Load wgt files to RAM */
+        private void loadWgtContent()
+        {
+ 
+        }
+
+        /* Load tree files to RAM*/
+        private void loadTreeContent()
+        {
+ 
         }
     }
 }

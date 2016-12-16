@@ -390,6 +390,12 @@ namespace EOS
                 {
                     loadNode(node);
                 }
+                // File node
+                else if (node.Nodes.Count > 0
+                    && CfgWgt.IsWgtFileNode(node))
+                {
+                    loadFileNode(node);
+                }
                 // Node with sub nodes
                 else
                 {
@@ -398,6 +404,11 @@ namespace EOS
             }
 
             return n;
+        }
+
+        private void loadFileNode(TreeNode node)
+        {
+            loadWgtContent(node);
         }
 
         private void loadNode(TreeNode node)
@@ -425,20 +436,30 @@ namespace EOS
             {
                 //ColorData cd = new ColorData();
                 //ResData.GetInstance().AddColor();
-                ResData.SyncResFile(strProjectResLoc + "\\" + node.Parent.FullPath, CfgRes.ResType.COLOR);
+                ResData.SyncResFileByType(strProjectResLoc + "\\" + node.Parent.FullPath, CfgRes.ResType.COLOR);
             }
         }
 
         /* Load wgt files to RAM */
-        private void loadWgtContent()
+        private void loadWgtContent(TreeNode node)
         {
- 
+            if (null == node)
+            {
+                return;
+            }
+
+            WgtData.SyncWgtFile(strProjectResLoc + "\\" + node.FullPath);
         }
 
         /* Load tree files to RAM*/
         private void loadTreeContent()
         {
  
+        }
+
+        public string GetNodeFullPath(TreeNode node)
+        {
+            return strProjectResLoc + "\\" + node.FullPath;
         }
     }
 }

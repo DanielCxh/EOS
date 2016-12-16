@@ -15,17 +15,17 @@ namespace EOS
     {
         // Class that contain one resource file content
 
-        string m_strTag = "";
+        public string m_strTag = "";
 
-        ArrayList m_fontData = null;
-        ArrayList m_colorData = null;
-        ArrayList m_stringData = null;
+        ArrayList m_fontList = null;
+        ArrayList m_colorList = null;
+        ArrayList m_stringList = null;
 
         public ResFile()
         {
-            m_colorData = new ArrayList();
-            m_fontData = new ArrayList();
-            m_stringData = new ArrayList();
+            m_colorList = new ArrayList();
+            m_fontList = new ArrayList();
+            m_stringList = new ArrayList();
         }
 
         public ResFile(string strTag
@@ -34,9 +34,9 @@ namespace EOS
             , ArrayList stringData = null)
         {
             m_strTag = strTag;
-            m_fontData = fontData;
-            m_colorData = colorData;
-            m_stringData = stringData;
+            m_fontList = fontData;
+            m_colorList = colorData;
+            m_stringList = stringData;
         }
 
         public void SetTag(string strTag)
@@ -51,9 +51,9 @@ namespace EOS
 
         public void AddColorData(ColorJson cj)
         {
-            if (null != cj)
+            if (null != cj && null != m_colorList)
             {
-                m_colorData.Add(cj);
+                m_colorList.Add(cj);
             }
         }
 
@@ -61,13 +61,13 @@ namespace EOS
         {
             if (null != fj)
             {
-                m_fontData.Add(fj);
+                m_fontList.Add(fj);
             }
         }
 
-        public ArrayList GetColorData()
+        public ArrayList GetColorList()
         {
-            return m_colorData;
+            return m_colorList;
         }
     }
 
@@ -103,12 +103,21 @@ namespace EOS
             return m_instance;
         }
 
-        // Read resource file, must make sure file path point to a .res file
-        static public void SyncResFile(string strResFilePath, CfgRes.ResType eType)
+        static public bool SyncResFile(string strWgtFilePath)
         {
+            bool bRst = false;
+
+            return bRst;
+        }
+
+        // Read resource file, must make sure file path point to a .res file
+        static public bool SyncResFileByType(string strResFilePath, CfgRes.ResType eType)
+        {
+            bool bRst = false;
+
             if (null == strResFilePath || 0 == strResFilePath.CompareTo(""))
             {
-                return;
+                return false;
             }
 
             string content = Common.GetFileContent(strResFilePath);
@@ -118,7 +127,6 @@ namespace EOS
 
             if (0 != strKey.CompareTo(""))
             {
-                Console.WriteLine(strResFilePath);
                 string detailContent = Common.GetJsonValueByKey(content, strKey);
 
                 ArrayList arrList = Common.GetJsonProperties(detailContent);
@@ -147,8 +155,9 @@ namespace EOS
                     }
                     catch (Exception e)
                     {
+                        bRst = false;
                         Console.WriteLine("[E]" + e.Message);
-                    }   
+                    }
                 }
 
                 // if no add, else get ResFile and set
@@ -156,7 +165,11 @@ namespace EOS
                 {
                     m_ResFileGroup.Add(data);
                 }
+
+                bRst = true;
             }
+
+            return bRst;
         }
 
         static public ResFile GetResFileByTag(string strTag)

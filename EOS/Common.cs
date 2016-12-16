@@ -35,6 +35,8 @@ namespace EOS
                 strInfo = strInfo + line.Trim();
             }
 
+            sr.Close();
+
             return strInfo;
         }
 
@@ -72,6 +74,18 @@ namespace EOS
             }
 
             return arrList;
+        }
+
+        public static bool IsStrEmpty(string str)
+        {
+            bool bRst = false;
+
+            if (null == str || 0 == str.CompareTo("") || 0 == str.Length)
+            {
+                bRst = true;
+            }
+
+            return bRst;
         }
     }
 }

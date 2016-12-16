@@ -13,8 +13,11 @@ namespace EOS
     /*-------------------------------------------------------------*/
     /*                       bitmap_image                          */
     /*-------------------------------------------------------------*/
-    class BitmapImage
+    class BitmapImgJson
     {
+        [JsonIgnore]
+        public string Title { get; set; }
+
         [JsonProperty(PropertyName = "file_name")]
         public string FileName { get; set; }
 
@@ -49,7 +52,7 @@ namespace EOS
     /*-------------------------------------------------------------*/
     /*                       solid_image                           */
     /*-------------------------------------------------------------*/
-    class SolidImage
+    class SolidImgJson
     {
         [JsonProperty(PropertyName = "fill_color")]
         public string FillColor { get; set; }
@@ -124,6 +127,40 @@ namespace EOS
             }
 
             return eType;
+        }
+
+        static public WgtType GetWgtNodeTypeByStr(string property)
+        {
+            WgtType eType = WgtType.UNKNOW;
+
+            if (0 == property.CompareTo(""))
+            {
+                return WgtType.UNKNOW;
+            }
+
+            if (0 == property.CompareTo(WGT_NODE_TYPE_BITMAP_IMG))
+            {
+                eType = WgtType.BITMAP_IMG;
+            }
+
+            return eType;
+        }
+
+        static public bool IsWgtFileNode(TreeNode node)
+        {
+            bool bRst = false;
+
+            if (null == node)
+            {
+                return false;
+            }
+
+            if (node.FullPath.EndsWith(".wgt"))
+            {
+                bRst = true;
+            }
+
+            return bRst;
         }
 
         static public bool IsWgtNode(TreeNode node)
@@ -227,6 +264,26 @@ namespace EOS
             }
 
             return bRst;
+        }
+
+        public static object GetWgtNodeContent(TreeNode node)
+        {
+            object obj = null;
+
+            string strFileTag = "";
+            string property = "";
+            string nodeName = "";
+
+            if (IsBitmapImgWgtNode(node))
+            {
+                strFileTag = ProjMgt.GetInstance().GetNodeFullPath(node.Parent.Parent);
+                property = node.Parent.Text;
+                nodeName = node.Text;
+            }
+
+            obj = WgtData.GetWgtContent(strFileTag, property, nodeName);
+
+            return obj;
         }
     }
 }

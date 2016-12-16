@@ -173,11 +173,12 @@ namespace EOS
                 Image img = Image.FromFile(ProjMgt.GetInstance().GetProjectResLoc() +"\\" + e.Node.FullPath);
 
                 Graphics g = SplitContainer.Panel2.CreateGraphics();
-                g.Clear(System.Drawing.Color.White);
+                g.Clear(System.Drawing.Color.DimGray);
 
                 int locX = (SplitContainer.Panel2.Width - img.Width) / 2;
                 int locY = (SplitContainer.Panel2.Height - img.Height) / 2;
 
+                g.FillRectangle(new SolidBrush(Color.White), locX, locY, img.Width, img.Height);
                 g.DrawImage(img, locX, locY, img.Width, img.Height);
 
                 g.Save();
@@ -191,6 +192,8 @@ namespace EOS
                 ResEdit re = new ResEdit(ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.Parent.FullPath);
                 re.Show();
             }
+
+            BitmapImgJson obj = (BitmapImgJson)CfgWgt.GetWgtNodeContent(e.Node);
             
             StatusBarInfo.Text = strExt;
         }

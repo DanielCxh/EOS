@@ -69,7 +69,7 @@ namespace EOS
                 return;
             }
 
-            ArrayList colorData = rf.GetColorData();
+            ArrayList colorData = rf.GetColorList();
            
             // Init head
             DataGridViewTextBoxColumn colorNameColumn = new DataGridViewTextBoxColumn();

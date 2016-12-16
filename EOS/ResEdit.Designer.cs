@@ -41,6 +41,9 @@
             // ResEditTabControl
             // 
             this.ResEditTabControl.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.ResEditTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ResEditTabControl.Controls.Add(this.ColorEditPage);
             this.ResEditTabControl.Controls.Add(this.StringEditPage);
             this.ResEditTabControl.Controls.Add(this.FontEditPage);
@@ -65,12 +68,18 @@
             // 
             // ColorTable
             // 
+            this.ColorTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ColorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ColorTable.Location = new System.Drawing.Point(6, 6);
+            this.ColorTable.Location = new System.Drawing.Point(3, 3);
             this.ColorTable.Name = "ColorTable";
             this.ColorTable.RowTemplate.Height = 23;
             this.ColorTable.Size = new System.Drawing.Size(540, 200);
             this.ColorTable.TabIndex = 0;
+            this.ColorTable.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.ColorTable_CellBeginEdit);
+            this.ColorTable.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.ColorTable_CellEndEdit);
+            this.ColorTable.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.ColorTable_CellValidating);
             // 
             // StringEditPage
             // 

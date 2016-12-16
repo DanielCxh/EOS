@@ -11,24 +11,32 @@ using Newtonsoft.Json.Linq;
 
 namespace EOS
 {
-    class ColorData
+    class ResFile
     {
-        // For multi color date user a tag distinguish
-        // In this case user node full path
+        // Class that contain one resource file content
+
         string m_strTag = "";
 
-        // Save multi color date
-        ArrayList m_data = null;
+        ArrayList m_fontData = null;
+        ArrayList m_colorData = null;
+        ArrayList m_stringData = null;
 
-        public ColorData()
+        public ResFile()
         {
-            m_data = new ArrayList();
+            m_colorData = new ArrayList();
+            m_fontData = new ArrayList();
+            m_stringData = new ArrayList();
         }
 
-        public ColorData(string strTag, ArrayList data)
+        public ResFile(string strTag
+            , ArrayList fontData = null
+            , ArrayList colorData = null
+            , ArrayList stringData = null)
         {
             m_strTag = strTag;
-            m_data = data;
+            m_fontData = fontData;
+            m_colorData = colorData;
+            m_stringData = stringData;
         }
 
         public void SetTag(string strTag)
@@ -41,14 +49,25 @@ namespace EOS
             return m_strTag;
         }
 
-        public void AddData(ColorJson cj)
+        public void AddColorData(ColorJson cj)
         {
-            m_data.Add(cj);
+            if (null != cj)
+            {
+                m_colorData.Add(cj);
+            }
         }
 
-        public ArrayList GetData()
+        public void AddFontData(FontJson fj)
         {
-            return m_data;
+            if (null != fj)
+            {
+                m_fontData.Add(fj);
+            }
+        }
+
+        public ArrayList GetColorData()
+        {
+            return m_colorData;
         }
     }
 
@@ -58,31 +77,15 @@ namespace EOS
     /// </summary>
     class ResData
     {
-        /* Save all color date */
-        static ArrayList m_colorDataGroup = new ArrayList();
-
-        /* Save all font date */
-        ArrayList m_fontDataGroup;
-
-        /* Save all sring date */
-        ArrayList m_stringDataGroup;
-
-        ArrayList m_fontArray;
-        ArrayList m_colorArray;
-        ArrayList m_stringArray;
+        /* Save all resource date */
+        static ArrayList m_ResFileGroup = new ArrayList();
 
         private static ResData m_instance = null;
         private static readonly object lockHelper = new object();
 
         private ResData()
         {
-           // m_colorDataGroup = new ArrayList();
-            m_fontDataGroup = new ArrayList();
-            m_stringDataGroup = new ArrayList();
 
-            m_fontArray = new ArrayList();
-            m_colorArray = new ArrayList();
-            m_stringArray = new ArrayList();
         }
 
         public static ResData GetInstance()
@@ -98,27 +101,6 @@ namespace EOS
                 }
             }
             return m_instance;
-        }
-
-        /* need check */
-        public void AddColor(ColorJson color)
-        {
-            m_colorArray.Add(color);
-        }
-
-        public ArrayList GetColorList()
-        {
-            return m_colorArray;
-        }
-
-        public void AddFont(FontJson font)
-        {
-            m_fontArray.Add(font);
-        }
-
-        public ArrayList GetFontList()
-        {
-            return m_fontArray;
         }
 
         // Read resource file, must make sure file path point to a .res file
@@ -141,9 +123,14 @@ namespace EOS
 
                 ArrayList arrList = Common.GetJsonProperties(detailContent);
 
-                ColorData data = new ColorData();
+                // Check ResFile exist or not
+                ResFile data = GetResFileByTag(strResFilePath);
 
-                data.SetTag(strResFilePath);
+                if (null == data)
+                {
+                    data = new ResFile();
+                    data.SetTag(strResFilePath);
+                }
 
                 foreach (string str in arrList)
                 {
@@ -156,7 +143,7 @@ namespace EOS
                         job = (ColorJson)JsonConvert.DeserializeObject(strVal, typeof(ColorJson));
                         job.Title = str;
 
-                        data.AddData(job);
+                        data.AddColorData(job);
                     }
                     catch (Exception e)
                     {
@@ -164,30 +151,22 @@ namespace EOS
                     }   
                 }
 
-                /*new check if contani*/
-                m_colorDataGroup.Add(data);
-            }
-
-            foreach (ColorData c in m_colorDataGroup)
-            {
-                ArrayList array = c.GetData();
-
-                foreach (ColorJson cj in array)
+                // if no add, else get ResFile and set
+                if (null == GetResFileByTag(strResFilePath))
                 {
-                    Console.WriteLine(cj.Title +":"+ cj.Format +":" + cj.Value[0]);
+                    m_ResFileGroup.Add(data);
                 }
             }
-
         }
 
-        static public ColorData GetResColorDataByTag(string strTag)
+        static public ResFile GetResFileByTag(string strTag)
         {
-            if (0 == strTag.CompareTo(""))
+            if (0 == strTag.CompareTo("") || null == m_ResFileGroup)
             {
                 return null;
             }
 
-            foreach(ColorData cd in m_colorDataGroup)
+            foreach (ResFile cd in m_ResFileGroup)
             {
                 if (0 == cd.GetTag().CompareTo(strTag))
                 {
@@ -196,6 +175,14 @@ namespace EOS
             }
 
             return null;
+        }
+
+        private void clearAllResData()
+        {
+            if (null != m_ResFileGroup)
+            {
+                m_ResFileGroup.Clear();
+            }
         }
     }
 }

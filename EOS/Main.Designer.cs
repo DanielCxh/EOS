@@ -41,17 +41,21 @@
             this.stringEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusBarInfo = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.SplitContainer = new System.Windows.Forms.SplitContainer();
+            this.SplitContainerFull = new System.Windows.Forms.SplitContainer();
             this.ProjectTree = new System.Windows.Forms.TreeView();
             this.ProjTreeImgList = new System.Windows.Forms.ImageList(this.components);
+            this.SplitContainerDetail = new System.Windows.Forms.SplitContainer();
             this.FreePanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResizeImg)).BeginInit();
             this.MenuBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
-            this.SplitContainer.Panel1.SuspendLayout();
-            this.SplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerFull)).BeginInit();
+            this.SplitContainerFull.Panel1.SuspendLayout();
+            this.SplitContainerFull.Panel2.SuspendLayout();
+            this.SplitContainerFull.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).BeginInit();
+            this.SplitContainerDetail.SuspendLayout();
             this.SuspendLayout();
             // 
             // TitleBG
@@ -169,29 +173,30 @@
             this.StatusBarInfo.TabIndex = 6;
             this.StatusBarInfo.Text = "StatusBar";
             // 
-            // SplitContainer
+            // SplitContainerFull
             // 
-            this.SplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.SplitContainerFull.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.SplitContainer.Cursor = System.Windows.Forms.Cursors.Default;
-            this.SplitContainer.Location = new System.Drawing.Point(0, 50);
-            this.SplitContainer.Margin = new System.Windows.Forms.Padding(0);
-            this.SplitContainer.Name = "SplitContainer";
+            this.SplitContainerFull.Cursor = System.Windows.Forms.Cursors.Default;
+            this.SplitContainerFull.Location = new System.Drawing.Point(0, 50);
+            this.SplitContainerFull.Margin = new System.Windows.Forms.Padding(0);
+            this.SplitContainerFull.Name = "SplitContainerFull";
             // 
-            // SplitContainer.Panel1
+            // SplitContainerFull.Panel1
             // 
-            this.SplitContainer.Panel1.BackColor = System.Drawing.Color.Gray;
-            this.SplitContainer.Panel1.Controls.Add(this.ProjectTree);
+            this.SplitContainerFull.Panel1.BackColor = System.Drawing.Color.DimGray;
+            this.SplitContainerFull.Panel1.Controls.Add(this.ProjectTree);
             // 
-            // SplitContainer.Panel2
+            // SplitContainerFull.Panel2
             // 
-            this.SplitContainer.Panel2.BackColor = System.Drawing.Color.DimGray;
-            this.SplitContainer.Size = new System.Drawing.Size(800, 400);
-            this.SplitContainer.SplitterDistance = 266;
-            this.SplitContainer.TabIndex = 7;
-            this.SplitContainer.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.SplitContainer_SplitterMoving);
-            this.SplitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer_SplitterMoved);
+            this.SplitContainerFull.Panel2.BackColor = System.Drawing.Color.Black;
+            this.SplitContainerFull.Panel2.Controls.Add(this.SplitContainerDetail);
+            this.SplitContainerFull.Size = new System.Drawing.Size(800, 400);
+            this.SplitContainerFull.SplitterDistance = 266;
+            this.SplitContainerFull.TabIndex = 7;
+            this.SplitContainerFull.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.SplitContainer_SplitterMoving);
+            this.SplitContainerFull.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer_SplitterMoved);
             // 
             // ProjectTree
             // 
@@ -199,6 +204,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.ProjectTree.BackColor = System.Drawing.Color.DimGray;
+            this.ProjectTree.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ProjectTree.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ProjectTree.ImageIndex = 0;
             this.ProjectTree.ImageList = this.ProjTreeImgList;
@@ -216,6 +222,28 @@
             this.ProjTreeImgList.ImageSize = new System.Drawing.Size(16, 16);
             this.ProjTreeImgList.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // SplitContainerDetail
+            // 
+            this.SplitContainerDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SplitContainerDetail.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.SplitContainerDetail.Location = new System.Drawing.Point(0, 0);
+            this.SplitContainerDetail.Name = "SplitContainerDetail";
+            // 
+            // SplitContainerDetail.Panel1
+            // 
+            this.SplitContainerDetail.Panel1.BackColor = System.Drawing.Color.DimGray;
+            this.SplitContainerDetail.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.SplitContainerDetail_Panel1_Paint);
+            // 
+            // SplitContainerDetail.Panel2
+            // 
+            this.SplitContainerDetail.Panel2.BackColor = System.Drawing.Color.Maroon;
+            this.SplitContainerDetail.Panel2.SizeChanged += new System.EventHandler(this.SplitContainerDetail_Panel2_SizeChanged);
+            this.SplitContainerDetail.Size = new System.Drawing.Size(530, 400);
+            this.SplitContainerDetail.SplitterDistance = 300;
+            this.SplitContainerDetail.TabIndex = 0;
+            // 
             // FreePanel
             // 
             this.FreePanel.Location = new System.Drawing.Point(0, 0);
@@ -230,7 +258,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(800, 480);
             this.Controls.Add(this.FreePanel);
-            this.Controls.Add(this.SplitContainer);
+            this.Controls.Add(this.SplitContainerFull);
             this.Controls.Add(this.StatusBarInfo);
             this.Controls.Add(this.ResizeImg);
             this.Controls.Add(this.CloseImg);
@@ -244,14 +272,20 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
             this.DoubleClick += new System.EventHandler(this.Main_DoubleClick);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Main_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.TitleBG)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseImg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResizeImg)).EndInit();
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
-            this.SplitContainer.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
-            this.SplitContainer.ResumeLayout(false);
+            this.SplitContainerFull.Panel1.ResumeLayout(false);
+            this.SplitContainerFull.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerFull)).EndInit();
+            this.SplitContainerFull.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).EndInit();
+            this.SplitContainerDetail.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -270,9 +304,10 @@
         private System.Windows.Forms.ToolStripMenuItem stringEditToolStripMenuItem;
         private System.Windows.Forms.Label StatusBarInfo;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.SplitContainer SplitContainer;
+        private System.Windows.Forms.SplitContainer SplitContainerFull;
         private System.Windows.Forms.Panel FreePanel;
         private System.Windows.Forms.TreeView ProjectTree;
         private System.Windows.Forms.ImageList ProjTreeImgList;
+        private System.Windows.Forms.SplitContainer SplitContainerDetail;
     }
 }

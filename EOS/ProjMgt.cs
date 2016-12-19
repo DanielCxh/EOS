@@ -57,6 +57,25 @@ namespace EOS
 
         private TreeView m_projectTree = null;
 
+        public enum NodeDetailType
+        {
+            NT_UNKNOW = 0,
+            
+            NT_PICTURE_PNG = 10,
+            NT_PICTURE_JPG = 11,
+
+            NT_RES_FONT = 100,
+            NT_RES_COLOR = 101,
+            NES_RES_STRING = 102,
+
+            NT_WGT_BITMAP_IMG = 200,
+            NT_WGT_SOLD_IMG = 201,
+            NT_WGT_TEXT_BOX = 202,
+            NT_WGT_PUSH_BUTTON = 203,
+            NT_WGT_SCROLL_BAR = 204,
+            NT_WGT_SCHEDULE_BAR = 205
+        }
+
         private ProjMgt()
         {
             /* Do nothing */
@@ -457,9 +476,44 @@ namespace EOS
  
         }
 
+        /// <summary>
+        /// Get node full path, maybe is not file system address.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public string GetNodeFullPath(TreeNode node)
         {
             return strProjectResLoc + "\\" + node.FullPath;
+        }
+
+        public static NodeDetailType GetNoteDetailType(TreeNode node)
+        {
+            if (null == node)
+            {
+                return NodeDetailType.NT_UNKNOW;
+            }
+
+            NodeDetailType nodeType = NodeDetailType.NT_UNKNOW;
+
+            if (CfgRes.IsResNode(node))
+            {
+ 
+            }
+            else if (CfgWgt.IsWgtNode(node))
+            {
+                switch (CfgWgt.GetWgtNodeType(node))
+                {
+                    case CfgWgt.WgtType.BITMAP_IMG:
+                        nodeType = NodeDetailType.NT_WGT_BITMAP_IMG;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+          
+
+            return nodeType;
         }
     }
 }

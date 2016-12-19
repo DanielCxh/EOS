@@ -31,10 +31,10 @@ namespace EOS
         public string Format { get; set; }
 
         [JsonProperty(PropertyName = "compress")]
-        public bool Compress { get; set; }
+        public string Compress { get; set; }
 
         [JsonProperty(PropertyName = "static_compiled")]
-        public bool StaticCompiled { get; set; }
+        public string StaticCompiled { get; set; }
 
         [JsonProperty(PropertyName = "storage")]
         public string Storage { get; set; }

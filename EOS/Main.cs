@@ -13,8 +13,24 @@ namespace EOS
     {
         StartUp m_Startup = null;
         bool m_bPressTitleBar = false;
+        bool m_bMouseDown = false;
+
+        TreeNode m_crtNode = null;
+
+        MouseDirection direction = MouseDirection.None;
+
         int m_iBaseX;
         int m_iBaseY;
+
+        WgtProperty wp = null;
+
+        public enum MouseDirection
+        {
+            Herizontal,     
+            Vertical,
+            Declining,   
+            None
+        }
 
         public Main()
         {
@@ -168,23 +184,10 @@ namespace EOS
 
             if (e.Node.FullPath.EndsWith(".png") || e.Node.FullPath.EndsWith(".jpg"))
             {
-               // Graphics g = this.CreateGraphics();
-
-                Image img = Image.FromFile(ProjMgt.GetInstance().GetProjectResLoc() +"\\" + e.Node.FullPath);
-
-                Graphics g = SplitContainer.Panel2.CreateGraphics();
-                g.Clear(System.Drawing.Color.DimGray);
-
-                int locX = (SplitContainer.Panel2.Width - img.Width) / 2;
-                int locY = (SplitContainer.Panel2.Height - img.Height) / 2;
-
-                g.FillRectangle(new SolidBrush(Color.White), locX, locY, img.Width, img.Height);
-                g.DrawImage(img, locX, locY, img.Width, img.Height);
-
-                g.Save();
-
-                strExt = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.FullPath;
-
+                wp.Close();
+                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
+                DrawMgt.DrawNode(e.Node);
+                m_crtNode = e.Node;
             }
             else if (CfgRes.IsColorResNode(e.Node))
             {
@@ -193,9 +196,126 @@ namespace EOS
                 re.Show();
             }
 
+            if (ProjMgt.NodeDetailType.NT_WGT_BITMAP_IMG == ProjMgt.GetNoteDetailType(e.Node))
+            {
+                 DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
+                 DrawMgt.DrawNode(e.Node);
+                 m_crtNode = e.Node;
+            }
+
             BitmapImgJson obj = (BitmapImgJson)CfgWgt.GetWgtNodeContent(e.Node);
-            
+
+            if (null != obj)
+            {
+                SplitContainerDetail.Panel2.Controls.Clear();
+
+                strExt = obj.Title;
+                wp = new WgtProperty();
+                wp.TopLevel = false;
+                wp.Width = SplitContainerDetail.Panel2.Width;
+
+                SplitContainerDetail.Panel2.Controls.Add(wp);
+                wp.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+                
+
+                wp.SetWgtNode(e.Node);
+                wp.Show();
+            }
+
             StatusBarInfo.Text = strExt;
+        }
+
+        private void Main_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_bMouseDown = true;
+        }
+
+        private void Main_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Location.X >= this.Width - 5 && e.Location.Y > this.Height - 5)
+            {
+                this.Cursor = Cursors.SizeNWSE;
+                direction = MouseDirection.Declining;
+            }
+            //
+            else if ((e.Location.X >= 0 && e.Location.X <=5 )
+                || e.Location.X >= this.Width - 5)
+            {
+                this.Cursor = Cursors.SizeWE;
+                direction = MouseDirection.Herizontal;
+            }
+            //
+            else if (e.Location.Y >= this.Height - 5)
+            {
+                this.Cursor = Cursors.SizeNS;
+                direction = MouseDirection.Vertical;
+
+            }
+            // Otherwise.
+            else
+            {
+                this.Cursor = Cursors.Arrow;
+                direction = MouseDirection.None;
+            }
+
+            if (MouseDirection.None != direction)
+            {
+                // Resize window.
+                //resizeWindow();
+            }
+        }
+
+        private void Main_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_bMouseDown = false;
+        }
+
+        private void resizeWindow()
+        {
+            if (false == m_bMouseDown)
+            {
+                return;
+            }
+
+            if (direction == MouseDirection.Declining) 
+            {
+                this.Cursor = Cursors.SizeNWSE; 
+               
+                this.Width = MousePosition.X - this.Left; 
+                this.Height = MousePosition.Y - this.Top; 
+            }
+
+            if (direction == MouseDirection.Herizontal) 
+            {
+                this.Cursor = Cursors.SizeWE; 
+                this.Width = MousePosition.X - this.Left; 
+            }
+            else if (direction == MouseDirection.Vertical)
+            {
+                this.Cursor = Cursors.SizeNS;
+                this.Height = MousePosition.Y - this.Top;
+            }
+            else
+            {
+                this.Cursor = Cursors.Arrow;
+            }
+        }
+
+        private void SplitContainerDetail_Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            if (null != wp)
+            {
+                wp.Width = SplitContainerDetail.Panel2.Width;
+            }
+        }
+
+        private void SplitContainerDetail_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+            if (null != m_crtNode)
+            {
+                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
+                DrawMgt.DrawNode(m_crtNode);
+            }
         }
     }
 }

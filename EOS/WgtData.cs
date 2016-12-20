@@ -98,6 +98,59 @@ namespace EOS
             return bRst;
         }
 
+        public BitmapImgJson GetBitmapImgDataByTitle(string strTitle)
+        {
+            BitmapImgJson bitmap = null;
+
+            if (Common.IsStrEmpty(strTitle) || null == m_bitmapImgList)
+            {
+                return null;
+            }
+
+            foreach (BitmapImgJson bij in m_bitmapImgList)
+            {
+                if (0 == bij.Title.CompareTo(strTitle))
+                {
+                    bitmap = bij;
+                    break;
+                }
+            }
+
+            return bitmap;
+        }
+
+        public bool AddPushButtonData(PushButtonJson pbj)
+        {
+            bool bRst = false;
+
+            if (null == pbj)
+            {
+                return false;
+            }
+
+            if (null == m_pushBtnList)
+            {
+                m_pushBtnList = new ArrayList();
+            }
+
+            m_pushBtnList.Add(pbj);
+
+            return bRst;
+        }
+
+    }
+
+    class WgtItemOutline
+    {
+        public string Path { get; set;}
+        public string Title { get; set;}
+        public object Object { get; set;}
+        public CfgWgt.WgtType Type { get; set;}
+
+        public WgtItemOutline()
+        {
+
+        }
     }
 
     class WgtData
@@ -175,7 +228,7 @@ namespace EOS
         {
             bool bRst = false;
 
-            if (null == strWgtFilePath || 0 == strWgtFilePath.CompareTo(""))
+            if (Common.IsStrEmpty(strWgtFilePath))
             {
                 return false;
             }
@@ -214,6 +267,27 @@ namespace EOS
                             job.Title = name;
 
                             wf.AddBitmapImgData(job);
+                        }
+                        catch (Exception e)
+                        {
+                            bRst = false;
+                            Console.WriteLine("[E]" + e.Message);
+                        }   
+                    }
+                    else if (0 == key.CompareTo(CfgWgt.WGT_NODE_TYPE_SOLID_IMG))
+                    {
+
+                    }
+                    else if (0 == key.CompareTo(CfgWgt.WGT_NODE_TYPE_PUSH_BUTTON))
+                    {
+                        PushButtonJson job = null;
+
+                        try
+                        {
+                            job = (PushButtonJson)JsonConvert.DeserializeObject(strVal, typeof(PushButtonJson));
+                            job.Title = name;
+
+                            wf.AddPushButtonData(job);
                         }
                         catch (Exception e)
                         {
@@ -286,6 +360,42 @@ namespace EOS
             }
 
             return bij;
+        }
+
+        public static WgtItemOutline GetWgtItem(string strFilePath, string strTitle)
+        {
+            WgtItemOutline item = null;
+
+
+            return item;
+        }
+
+        public static WgtItemOutline GetWgtItem(string strTitle)
+        {
+            WgtItemOutline item = null;
+
+            if (Common.IsStrEmpty(strTitle) || null == m_WgtFileGroup || 0 >= m_WgtFileGroup.Count)
+            {
+                return null;
+            }
+
+            foreach (WgtFile wf in m_WgtFileGroup)
+            {
+                foreach (BitmapImgJson bij in wf.GetBitmapImgList())
+                {
+                    if (0 == bij.Title.CompareTo(strTitle))
+                    {
+                        item = new WgtItemOutline();
+                        item.Title = strTitle;
+                        item.Path = wf.GetTag();
+                        item.Object = bij;
+                        item.Type = CfgWgt.WgtType.BITMAP_IMG;
+                        break;
+                    }
+                }
+            }
+
+            return item;
         }
     }
 }

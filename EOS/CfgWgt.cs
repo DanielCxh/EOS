@@ -54,6 +54,9 @@ namespace EOS
     /*-------------------------------------------------------------*/
     class SolidImgJson
     {
+        [JsonIgnore]
+        public string Title { get; set; }
+
         [JsonProperty(PropertyName = "fill_color")]
         public string FillColor { get; set; }
 
@@ -69,6 +72,43 @@ namespace EOS
         [JsonProperty(PropertyName = "outline_width")]
         public string OutlineWidth { get; set; }
     }
+
+    /*-------------------------------------------------------------*/
+    /*                         text_box                            */
+    /*-------------------------------------------------------------*/
+    class TextBoxJson
+    {
+        [JsonIgnore]
+        public string Title { get; set; }
+    }
+
+    /*-------------------------------------------------------------*/
+    /*                       push_button                           */
+    /*-------------------------------------------------------------*/
+    class PushButtonJson
+    {
+        [JsonIgnore]
+        public string Title { get; set; }
+
+        [JsonProperty(PropertyName = "state_non_focus")]
+        public string StateNonFocus { get; set; }
+
+        [JsonProperty(PropertyName = "state_focus")]
+        public string StateFocus { get; set; }
+
+        [JsonProperty(PropertyName = "state_inactive_focus")]
+        public string StateInactiveFocus { get; set; }
+
+        [JsonProperty(PropertyName = "state_pushed")]
+        public string StatePushed { get; set; }
+
+        [JsonProperty(PropertyName = "state_customer1")]
+        public string StateCustomer1 { get; set; }
+
+        [JsonProperty(PropertyName = "state_customer2")]
+        public string StateCustomer2 { get; set; }
+    }
+
 
     class CfgWgt
     {
@@ -163,7 +203,7 @@ namespace EOS
             return bRst;
         }
 
-        static public bool IsWgtNode(TreeNode node)
+        public static bool IsWgtNode(TreeNode node)
         {
             bool bRst = false;
 

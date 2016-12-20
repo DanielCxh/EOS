@@ -26,7 +26,7 @@ namespace EOS
         {
             InitializeComponent();
 
-            wgtTypeTabControl.Width = this.Width + 10;
+            wgtTypeTabControl.Width = this.Width + 8;
 
             showTabPage(WgtTabType.BITMAP_IMAGE);
         }
@@ -59,6 +59,7 @@ namespace EOS
         {
             if (null == node)
             {
+                Console.WriteLine("[E]" + "[SetWgtNode]" + "node is null");
                 return;
             }
 
@@ -80,15 +81,36 @@ namespace EOS
 
                 BitmapImgTextBox.Text = strTitle;
                 FileNameTextBox.Text = strFileName;
-                widthTextBox.Text = strWidth;
-                heightTextBox.Text = strHeight;
+                widthTextBox.Text = (strWidth == null ? "default" : strWidth);
+                heightTextBox.Text = (strHeight == null ? "default" : strHeight);
                 formatTextBox.Text = strFormat;
-
+                outlineImageTextBox.Text = (strOutlineImage == null ? "null" : strOutlineImage);
+                outlineColorTextBox.Text = (strOutlineColor == null ? "null" : strOutlineColor);
+                outlineWidthTextBox.Text = strOutlineWidth;
+                
                 for (int i = 0; i < compressComboBox.Items.Count; i++ )
                 {
                     if (0 == compressComboBox.Items[i].ToString().CompareTo(strCompress))
                     {
                         compressComboBox.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < staticCompiledComboBox.Items.Count; i++)
+                {
+                    if (0 == staticCompiledComboBox.Items[i].ToString().CompareTo(strStaticCompiled))
+                    {
+                        staticCompiledComboBox.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < storageComboBox.Items.Count; i++)
+                {
+                    if (0 == storageComboBox.Items[i].ToString().CompareTo(strStorage))
+                    {
+                        storageComboBox.SelectedIndex = i;
                         break;
                     }
                 }

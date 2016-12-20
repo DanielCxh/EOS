@@ -73,7 +73,9 @@ namespace EOS
             NT_WGT_TEXT_BOX = 202,
             NT_WGT_PUSH_BUTTON = 203,
             NT_WGT_SCROLL_BAR = 204,
-            NT_WGT_SCHEDULE_BAR = 205
+            NT_WGT_SCHEDULE_BAR = 205,
+
+            NT_TREE_ITEM = 300
         }
 
         private ProjMgt()
@@ -407,11 +409,11 @@ namespace EOS
                 // Leaf node
                 if (node.Nodes.Count <= 0)
                 {
-                    loadNode(node);
+                    loadLeafNode(node);
                 }
                 // File node
                 else if (node.Nodes.Count > 0
-                    && CfgWgt.IsWgtFileNode(node))
+                    && (CfgWgt.IsWgtFileNode(node) || CfgTree.IsTreeFileNode(node)))
                 {
                     loadFileNode(node);
                 }
@@ -427,10 +429,26 @@ namespace EOS
 
         private void loadFileNode(TreeNode node)
         {
-            loadWgtContent(node);
+            if (null == node)
+            {
+                return;
+            }
+
+            if (true == CfgWgt.IsWgtFileNode(node))
+            {
+                loadWgtContent(node);
+            }
+            else if (true == CfgTree.IsTreeFileNode(node))
+            {
+                loadTreeContent(node);
+            }
+            else
+            {
+
+            }
         }
 
-        private void loadNode(TreeNode node)
+        private void loadLeafNode(TreeNode node)
         {
             if (CfgRes.IsResNode(node))
             {
@@ -467,13 +485,18 @@ namespace EOS
                 return;
             }
 
-            WgtData.SyncWgtFile(strProjectResLoc + "\\" + node.FullPath);
+            WgtData.SyncWgtFile(GetNodeFullPath(node));
         }
 
         /* Load tree files to RAM*/
-        private void loadTreeContent()
+        private void loadTreeContent(TreeNode node)
         {
- 
+            if (null == node)
+            {
+                return;
+            }
+
+            TreeData.SyncTreeFile(GetNodeFullPath(node));
         }
 
         /// <summary>
@@ -484,6 +507,18 @@ namespace EOS
         public string GetNodeFullPath(TreeNode node)
         {
             return strProjectResLoc + "\\" + node.FullPath;
+        }
+
+        public static bool IsPictureNode(TreeNode node)
+        {
+            bool bRst = false;
+
+            if (node.FullPath.EndsWith(".png") || node.FullPath.EndsWith(".jpg"))
+            {
+                bRst = true;
+            }
+
+            return bRst;
         }
 
         public static NodeDetailType GetNoteDetailType(TreeNode node)
@@ -510,6 +545,14 @@ namespace EOS
                         break;
                 }
 
+            }
+            else if (CfgTree.IsTreeItemNode(node))
+            {
+                nodeType = NodeDetailType.NT_TREE_ITEM;
+            }
+            else if (IsPictureNode(node))
+            {
+                nodeType = NodeDetailType.NT_PICTURE_PNG;
             }
           
 

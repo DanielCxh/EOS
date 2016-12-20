@@ -54,9 +54,11 @@
   <ItemGroup>
     <Compile Include="BitmapImg.cs" />
     <Compile Include="CfgRes.cs" />
+    <Compile Include="CfgTree.cs" />
     <Compile Include="CfgWgt.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="DrawMgt.cs" />
+    <Compile Include="LogMgt.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +89,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringRes.cs" />
     <Compile Include="StatusBarMgt.cs" />
+    <Compile Include="TreeData.cs" />
     <Compile Include="WgtData.cs" />
     <Compile Include="WgtProperty.cs">
       <SubType>Form</SubType>

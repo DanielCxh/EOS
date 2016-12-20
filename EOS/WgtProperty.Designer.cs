@@ -30,6 +30,19 @@
         {
             this.wgtTypeTabControl = new System.Windows.Forms.TabControl();
             this.bitmapImgTabPage = new System.Windows.Forms.TabPage();
+            this.outlineWidthTextBox = new System.Windows.Forms.TextBox();
+            this.outlineColorTextBox = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.outlineImageTextBox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.storageComboBox = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.staticCompiledComboBox = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.compressComboBox = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.formatTextBox = new System.Windows.Forms.TextBox();
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -44,19 +57,6 @@
             this.pushBtnTabPag = new System.Windows.Forms.TabPage();
             this.scrollBarTabPage = new System.Windows.Forms.TabPage();
             this.scheduleBarTabPage = new System.Windows.Forms.TabPage();
-            this.formatTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.compressComboBox = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.staticCompiledComboBox = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.storageComboBox = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.outlineImageTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.outlineColorTextBox = new System.Windows.Forms.TextBox();
-            this.outlineWidthTextBox = new System.Windows.Forms.TextBox();
             this.wgtTypeTabControl.SuspendLayout();
             this.bitmapImgTabPage.SuspendLayout();
             this.SuspendLayout();
@@ -111,6 +111,123 @@
             this.bitmapImgTabPage.Size = new System.Drawing.Size(214, 361);
             this.bitmapImgTabPage.TabIndex = 0;
             this.bitmapImgTabPage.Text = "Bitmap Image";
+            // 
+            // outlineWidthTextBox
+            // 
+            this.outlineWidthTextBox.Location = new System.Drawing.Point(100, 325);
+            this.outlineWidthTextBox.Name = "outlineWidthTextBox";
+            this.outlineWidthTextBox.Size = new System.Drawing.Size(100, 21);
+            this.outlineWidthTextBox.TabIndex = 25;
+            // 
+            // outlineColorTextBox
+            // 
+            this.outlineColorTextBox.Location = new System.Drawing.Point(100, 295);
+            this.outlineColorTextBox.Name = "outlineColorTextBox";
+            this.outlineColorTextBox.Size = new System.Drawing.Size(100, 21);
+            this.outlineColorTextBox.TabIndex = 24;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(11, 328);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(83, 12);
+            this.label10.TabIndex = 23;
+            this.label10.Text = "outline width";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 295);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(83, 12);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "outline color";
+            // 
+            // outlineImageTextBox
+            // 
+            this.outlineImageTextBox.Location = new System.Drawing.Point(100, 261);
+            this.outlineImageTextBox.Name = "outlineImageTextBox";
+            this.outlineImageTextBox.Size = new System.Drawing.Size(100, 21);
+            this.outlineImageTextBox.TabIndex = 21;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(11, 264);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(83, 12);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "outline image";
+            // 
+            // storageComboBox
+            // 
+            this.storageComboBox.FormattingEnabled = true;
+            this.storageComboBox.Items.AddRange(new object[] {
+            "flash",
+            "code"});
+            this.storageComboBox.Location = new System.Drawing.Point(71, 229);
+            this.storageComboBox.Name = "storageComboBox";
+            this.storageComboBox.Size = new System.Drawing.Size(121, 20);
+            this.storageComboBox.TabIndex = 19;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 232);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 12);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "storage";
+            // 
+            // staticCompiledComboBox
+            // 
+            this.staticCompiledComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.staticCompiledComboBox.FormattingEnabled = true;
+            this.staticCompiledComboBox.Items.AddRange(new object[] {
+            "true",
+            "false"});
+            this.staticCompiledComboBox.Location = new System.Drawing.Point(111, 196);
+            this.staticCompiledComboBox.Name = "staticCompiledComboBox";
+            this.staticCompiledComboBox.Size = new System.Drawing.Size(81, 20);
+            this.staticCompiledComboBox.TabIndex = 17;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 205);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 12);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "static compiled";
+            // 
+            // compressComboBox
+            // 
+            this.compressComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.compressComboBox.FormattingEnabled = true;
+            this.compressComboBox.Items.AddRange(new object[] {
+            "true",
+            "false"});
+            this.compressComboBox.Location = new System.Drawing.Point(71, 166);
+            this.compressComboBox.Name = "compressComboBox";
+            this.compressComboBox.Size = new System.Drawing.Size(121, 20);
+            this.compressComboBox.TabIndex = 15;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(11, 175);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 12);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Compress";
+            // 
+            // formatTextBox
+            // 
+            this.formatTextBox.Location = new System.Drawing.Point(55, 139);
+            this.formatTextBox.Name = "formatTextBox";
+            this.formatTextBox.Size = new System.Drawing.Size(100, 21);
+            this.formatTextBox.TabIndex = 13;
             // 
             // FileNameTextBox
             // 
@@ -190,7 +307,7 @@
             this.soldImgTabPage.Location = new System.Drawing.Point(4, 22);
             this.soldImgTabPage.Name = "soldImgTabPage";
             this.soldImgTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.soldImgTabPage.Size = new System.Drawing.Size(214, 340);
+            this.soldImgTabPage.Size = new System.Drawing.Size(214, 361);
             this.soldImgTabPage.TabIndex = 1;
             this.soldImgTabPage.Text = "tabPage2";
             this.soldImgTabPage.UseVisualStyleBackColor = true;
@@ -200,7 +317,7 @@
             this.textBoxTabPage.Location = new System.Drawing.Point(4, 22);
             this.textBoxTabPage.Name = "textBoxTabPage";
             this.textBoxTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.textBoxTabPage.Size = new System.Drawing.Size(214, 252);
+            this.textBoxTabPage.Size = new System.Drawing.Size(214, 361);
             this.textBoxTabPage.TabIndex = 2;
             this.textBoxTabPage.Text = "tabPage3";
             this.textBoxTabPage.UseVisualStyleBackColor = true;
@@ -210,7 +327,7 @@
             this.pushBtnTabPag.Location = new System.Drawing.Point(4, 22);
             this.pushBtnTabPag.Name = "pushBtnTabPag";
             this.pushBtnTabPag.Padding = new System.Windows.Forms.Padding(3);
-            this.pushBtnTabPag.Size = new System.Drawing.Size(214, 252);
+            this.pushBtnTabPag.Size = new System.Drawing.Size(214, 361);
             this.pushBtnTabPag.TabIndex = 3;
             this.pushBtnTabPag.Text = "tabPage4";
             this.pushBtnTabPag.UseVisualStyleBackColor = true;
@@ -220,7 +337,7 @@
             this.scrollBarTabPage.Location = new System.Drawing.Point(4, 22);
             this.scrollBarTabPage.Name = "scrollBarTabPage";
             this.scrollBarTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.scrollBarTabPage.Size = new System.Drawing.Size(214, 252);
+            this.scrollBarTabPage.Size = new System.Drawing.Size(214, 361);
             this.scrollBarTabPage.TabIndex = 4;
             this.scrollBarTabPage.Text = "tabPage5";
             this.scrollBarTabPage.UseVisualStyleBackColor = true;
@@ -230,126 +347,10 @@
             this.scheduleBarTabPage.Location = new System.Drawing.Point(4, 22);
             this.scheduleBarTabPage.Name = "scheduleBarTabPage";
             this.scheduleBarTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.scheduleBarTabPage.Size = new System.Drawing.Size(214, 252);
+            this.scheduleBarTabPage.Size = new System.Drawing.Size(214, 361);
             this.scheduleBarTabPage.TabIndex = 5;
             this.scheduleBarTabPage.Text = "tabPage6";
             this.scheduleBarTabPage.UseVisualStyleBackColor = true;
-            // 
-            // formatTextBox
-            // 
-            this.formatTextBox.Location = new System.Drawing.Point(55, 139);
-            this.formatTextBox.Name = "formatTextBox";
-            this.formatTextBox.Size = new System.Drawing.Size(100, 21);
-            this.formatTextBox.TabIndex = 13;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 175);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 12);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Compress";
-            // 
-            // compressComboBox
-            // 
-            this.compressComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.compressComboBox.FormattingEnabled = true;
-            this.compressComboBox.Items.AddRange(new object[] {
-            "true",
-            "false"});
-            this.compressComboBox.Location = new System.Drawing.Point(71, 166);
-            this.compressComboBox.Name = "compressComboBox";
-            this.compressComboBox.Size = new System.Drawing.Size(121, 20);
-            this.compressComboBox.TabIndex = 15;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 205);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 12);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "static compiled";
-            // 
-            // staticCompiledComboBox
-            // 
-            this.staticCompiledComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.staticCompiledComboBox.FormattingEnabled = true;
-            this.staticCompiledComboBox.Items.AddRange(new object[] {
-            "true",
-            "false"});
-            this.staticCompiledComboBox.Location = new System.Drawing.Point(111, 196);
-            this.staticCompiledComboBox.Name = "staticCompiledComboBox";
-            this.staticCompiledComboBox.Size = new System.Drawing.Size(81, 20);
-            this.staticCompiledComboBox.TabIndex = 17;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 232);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(47, 12);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "storage";
-            // 
-            // storageComboBox
-            // 
-            this.storageComboBox.FormattingEnabled = true;
-            this.storageComboBox.Items.AddRange(new object[] {
-            "flash"});
-            this.storageComboBox.Location = new System.Drawing.Point(71, 229);
-            this.storageComboBox.Name = "storageComboBox";
-            this.storageComboBox.Size = new System.Drawing.Size(121, 20);
-            this.storageComboBox.TabIndex = 19;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(11, 264);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(83, 12);
-            this.label8.TabIndex = 20;
-            this.label8.Text = "outline image";
-            // 
-            // outlineImageTextBox
-            // 
-            this.outlineImageTextBox.Location = new System.Drawing.Point(100, 261);
-            this.outlineImageTextBox.Name = "outlineImageTextBox";
-            this.outlineImageTextBox.Size = new System.Drawing.Size(100, 21);
-            this.outlineImageTextBox.TabIndex = 21;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(9, 295);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(83, 12);
-            this.label9.TabIndex = 22;
-            this.label9.Text = "outline color";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(11, 328);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(83, 12);
-            this.label10.TabIndex = 23;
-            this.label10.Text = "outline width";
-            // 
-            // outlineColorTextBox
-            // 
-            this.outlineColorTextBox.Location = new System.Drawing.Point(100, 295);
-            this.outlineColorTextBox.Name = "outlineColorTextBox";
-            this.outlineColorTextBox.Size = new System.Drawing.Size(100, 21);
-            this.outlineColorTextBox.TabIndex = 24;
-            // 
-            // outlineWidthTextBox
-            // 
-            this.outlineWidthTextBox.Location = new System.Drawing.Point(100, 325);
-            this.outlineWidthTextBox.Name = "outlineWidthTextBox";
-            this.outlineWidthTextBox.Size = new System.Drawing.Size(100, 21);
-            this.outlineWidthTextBox.TabIndex = 25;
             // 
             // WgtProperty
             // 

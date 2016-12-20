@@ -181,13 +181,20 @@ namespace EOS
         private void ProjectTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             string strExt = "";
+            bool showPropertyPanel = false;
+
+            if (null != wp)
+            {
+                wp.Close();
+            }
 
             if (e.Node.FullPath.EndsWith(".png") || e.Node.FullPath.EndsWith(".jpg"))
             {
-                wp.Close();
                 DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
                 DrawMgt.DrawNode(e.Node);
                 m_crtNode = e.Node;
+
+                return;
             }
             else if (CfgRes.IsColorResNode(e.Node))
             {
@@ -196,20 +203,27 @@ namespace EOS
                 re.Show();
             }
 
-            if (ProjMgt.NodeDetailType.NT_WGT_BITMAP_IMG == ProjMgt.GetNoteDetailType(e.Node))
+            if (CfgWgt.IsWgtNode(e.Node))
             {
                  DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
                  DrawMgt.DrawNode(e.Node);
                  m_crtNode = e.Node;
+
+                 showPropertyPanel = true;
+            }
+            else if (ProjMgt.NodeDetailType.NT_TREE_ITEM == ProjMgt.GetNoteDetailType(e.Node))
+            {
+                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
+                DrawMgt.DrawNode(e.Node);
+                m_crtNode = e.Node;
+
+                showPropertyPanel = false;
             }
 
-            BitmapImgJson obj = (BitmapImgJson)CfgWgt.GetWgtNodeContent(e.Node);
-
-            if (null != obj)
+            if (true == showPropertyPanel)
             {
                 SplitContainerDetail.Panel2.Controls.Clear();
 
-                strExt = obj.Title;
                 wp = new WgtProperty();
                 wp.TopLevel = false;
                 wp.Width = SplitContainerDetail.Panel2.Width;
@@ -217,7 +231,6 @@ namespace EOS
                 SplitContainerDetail.Panel2.Controls.Add(wp);
                 wp.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
                 
-
                 wp.SetWgtNode(e.Node);
                 wp.Show();
             }

@@ -40,23 +40,54 @@ namespace EOS
                 // Wgt
                 DrawWgtNode(node);
             }
+                // Tree
+            else if (ProjMgt.NodeDetailType.NT_TREE_ITEM == ProjMgt.GetNoteDetailType(node))
+            {
+                DrawTree(node);
+            }
 
-            // Tree
-
-            // Picture
-            //DrawPictureNode(node);
+            else if (ProjMgt.NodeDetailType.NT_PICTURE_PNG == ProjMgt.GetNoteDetailType(node)
+                || ProjMgt.NodeDetailType.NT_PICTURE_JPG == ProjMgt.GetNoteDetailType(node))
+            {
+                DrawPictureNode(node);
+            }
         }
 
         public static void DrawWgtNode(TreeNode node)
         {
             // file name
-            BitmapImgJson obj = (BitmapImgJson)CfgWgt.GetWgtNodeContent(node);
 
-            if (null != obj)
+            if (ProjMgt.NodeDetailType.NT_WGT_BITMAP_IMG == ProjMgt.GetNoteDetailType(node))
             {
-                string strPath = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + obj.FileName;
-                DrawPicture(strPath);
+                BitmapImgJson obj = (BitmapImgJson)CfgWgt.GetWgtNodeContent(node);
+                DrawWgtBitmapImg(obj);
             }
+            else if (ProjMgt.NodeDetailType.NT_WGT_PUSH_BUTTON == ProjMgt.GetNoteDetailType(node))
+            {
+                PushButtonJson obj = (PushButtonJson)CfgWgt.GetWgtNodeContent(node);
+                DraWgtPushBtn(obj);
+            }
+        }
+
+        public static void DrawWgtBitmapImg(BitmapImgJson bij)
+        {
+            if (null == bij)
+            {
+                return;
+            }
+
+            string strPath = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + bij.FileName;
+            DrawPicture(strPath);
+        }
+
+        public static void DraWgtPushBtn(PushButtonJson pbj)
+        {
+            if (null == pbj)
+            {
+                return;
+            }
+
+            Console.WriteLine(pbj.Title);
         }
 
         private void drawTreeNode()
@@ -71,6 +102,8 @@ namespace EOS
             {
                 return false;
             }
+
+            Console.WriteLine(node.FullPath);
 
             m_graphics.Clear(Color.White);
 
@@ -122,6 +155,52 @@ namespace EOS
             m_graphics.Save();
 
             return true;
+        }
+
+        public static void DrawTree(TreeNode node)
+        {
+            if (null == node)
+            {
+                return;
+            }
+
+            string strKey = node.Text.ToString();
+            string strTag = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + node.Parent.FullPath;
+
+            TreeFile tf = TreeData.GetTreeFileByTag(strTag);
+
+            if (null == tf)
+            {
+                return;
+            }
+
+            TreeNodeJson tnj = tf.GetTreeNodeByKey(strKey);
+
+            if (null != tnj)
+            {
+                DrawTreeNode(tnj.Title);
+            }
+        }
+
+        public static void DrawTreeNode(string strNodeTitle)
+        {
+            NodeResData nrd = TreeData.GetNodeResByTitle(strNodeTitle);
+
+            WgtItemOutline item = WgtData.GetWgtItem(nrd.Key);
+
+            if (null != item)
+            {
+                if (CfgWgt.WgtType.BITMAP_IMG == item.Type)
+                {
+                   DrawWgtBitmapImg((BitmapImgJson)item.Object);
+                }
+
+                 //Console.WriteLine();
+            }
+
+            // Children
+            // DrawTreeNode
+           
         }
     }
 }

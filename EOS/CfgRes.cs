@@ -126,6 +126,11 @@ namespace EOS
         {
             bool bRst = false;
 
+            if (null == node)
+            {
+                return false;
+            }
+
             if (true == IsResNode(node) && node.FullPath.EndsWith(RES_TYPE_FONT))
             {
                 bRst = true;
@@ -138,6 +143,11 @@ namespace EOS
         {
             bool bRst = false;
 
+            if (null == node)
+            {
+                return false;
+            }
+
             if (true == IsResNode(node) && node.FullPath.EndsWith(RES_TYPE_COLOR))
             {
                 bRst = true;
@@ -146,9 +156,14 @@ namespace EOS
             return bRst;
         }
 
-        static public bool IsStringResNode(TreeNode node)
+        public static bool IsStringResNode(TreeNode node)
         {
             bool bRst = false;
+
+            if (null == node)
+            {
+                return false;
+            }
 
             if (true == IsResNode(node) && node.FullPath.EndsWith(RES_TYPE_STRING))
             {

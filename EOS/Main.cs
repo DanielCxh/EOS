@@ -330,5 +330,25 @@ namespace EOS
                 DrawMgt.DrawNode(m_crtNode);
             }
         }
+
+        private void SplitContainerDetail_Panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine(e.X + ":" + e.Y);
+        }
+
+        private void previewSubMenuItem_Click(object sender, EventArgs e)
+        {
+            if (null != m_crtNode)
+            {
+                PreviewPanel panel = new PreviewPanel();
+
+                DrawMgt.SetCanvas(panel);
+
+                panel.Show();
+
+                /* Need show panel first than draw graphic */
+                DrawMgt.DrawNode(m_crtNode);
+            }
+        }
     }
 }

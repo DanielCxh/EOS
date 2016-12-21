@@ -262,6 +262,7 @@ namespace EOS
 
             if (null == m_TreeNodeResDataGroup)
             {
+                LogMgt.Debug("GetNodeResByTitle", "m_TreeNodeResDataGroup is null");
                 return null;
             }
 
@@ -275,6 +276,30 @@ namespace EOS
             }
 
             return nodeRes;
+        }
+
+        public static TreeNodeJson GetTreeNode(string strTitle)
+        {
+            TreeNodeJson node = null;
+
+            if (Common.IsStrEmpty(strTitle)
+                || null == m_TreeFileGroup)
+            {
+                return null;
+            }
+
+            foreach (TreeFile tf in m_TreeFileGroup)
+            {
+                TreeNodeJson tnj = tf.GetTreeNodeByKey(strTitle);
+
+                if (null != tnj)
+                {
+                    node = tnj;
+                    break;
+                }
+            }
+
+            return node;
         }
     }
 }

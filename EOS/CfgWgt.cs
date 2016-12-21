@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace EOS
 {
-    /*-------------------------------------------------------------*/
-    /*                       bitmap_image                          */
-    /*-------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------*/
+    /*                                  bitmap_image                                   */
+    /*---------------------------------------------------------------------------------*/
     class BitmapImgJson
     {
         [JsonIgnore]
@@ -49,9 +49,9 @@ namespace EOS
         public string OutlineWidth { get; set; }
     }
 
-    /*-------------------------------------------------------------*/
-    /*                       solid_image                           */
-    /*-------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------*/
+    /*                                   solid_image                                   */
+    /*---------------------------------------------------------------------------------*/
     class SolidImgJson
     {
         [JsonIgnore]
@@ -73,18 +73,42 @@ namespace EOS
         public string OutlineWidth { get; set; }
     }
 
-    /*-------------------------------------------------------------*/
-    /*                         text_box                            */
-    /*-------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------*/
+    /*                                    text_box                                     */
+    /*---------------------------------------------------------------------------------*/
     class TextBoxJson
     {
         [JsonIgnore]
         public string Title { get; set; }
+
+        [JsonProperty(PropertyName = "font")]
+        public string Font { get; set; }
+
+        [JsonProperty(PropertyName = "x_alignment")]
+        public string AlignmentX { get; set; }
+
+        [JsonProperty(PropertyName = "y_alignment")]
+        public string AlignmentY { get; set; }
+
+        [JsonProperty(PropertyName = "indent")]
+        public string Indent { get; set; }
+
+        [JsonProperty(PropertyName = "text_color")]
+        public string TextColor { get; set; }
+
+        [JsonProperty(PropertyName = "background")]
+        public string Background { get; set; }
+
+        [JsonProperty(PropertyName = "keep_last_text")]
+        public string KeepLastText { get; set; }
+
+        [JsonProperty(PropertyName = "show_more_indicator")]
+        public string ShowMoreIndicator { get; set; }
     }
 
-    /*-------------------------------------------------------------*/
-    /*                       push_button                           */
-    /*-------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------*/
+    /*                                    push_button                                  */
+    /*---------------------------------------------------------------------------------*/
     class PushButtonJson
     {
         [JsonIgnore]
@@ -109,6 +133,50 @@ namespace EOS
         public string StateCustomer2 { get; set; }
     }
 
+    /*---------------------------------------------------------------------------------*/
+    /*                                     scroll_bar                                  */
+    /*---------------------------------------------------------------------------------*/
+    class ScrollBarJson
+    {
+        [JsonIgnore]
+        public string Title { get; set; }
+
+        [JsonProperty(PropertyName = "scroll_box")]
+        public string ScrollBox { get; set; }
+
+        [JsonProperty(PropertyName = "scroll_offset")]
+        public string ScrollOffset { get; set; }
+
+        [JsonProperty(PropertyName = "background")]
+        public string Background { get; set; }
+
+        [JsonProperty(PropertyName = "orientation")]
+        public string Orientation { get; set; }
+    }
+
+    /*---------------------------------------------------------------------------------*/
+    /*                                    schedule_bar                                 */
+    /*---------------------------------------------------------------------------------*/
+    class ScheduleBarJson
+    {
+        [JsonIgnore]
+        public string Title { get; set; }
+
+        [JsonProperty(PropertyName = "foreground")]
+        public string Foreground { get; set; }
+
+        [JsonProperty(PropertyName = "background")]
+        public string Background { get; set; }
+
+        [JsonProperty(PropertyName = "process_offset")]
+        public string ProcestsOffse { get; set; }
+
+        [JsonProperty(PropertyName = "discrate")]
+        public string Discrate { get; set; }
+
+        [JsonProperty(PropertyName = "orientation")]
+        public string Orientation { get; set; }
+    }
 
     class CfgWgt
     {

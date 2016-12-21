@@ -119,6 +119,25 @@ namespace EOS
             return bitmap;
         }
 
+        public bool AddTextBoxData(TextBoxJson tbj)
+        {
+            bool bRst = false;
+
+            if (null == tbj)
+            {
+                return false;
+            }
+
+            if (null == m_textBoxList)
+            {
+                m_textBoxList = new ArrayList();
+            }
+
+            m_textBoxList.Add(tbj);
+
+            return bRst;
+        }
+
         public bool AddPushButtonData(PushButtonJson pbj)
         {
             bool bRst = false;
@@ -138,6 +157,24 @@ namespace EOS
             return bRst;
         }
 
+        public bool AddScrollBarData(ScrollBarJson sbj)
+        {
+            bool bRst = false;
+
+            if (null == sbj)
+            {
+                return false;
+            }
+
+            if (null == m_scrollBarList)
+            {
+                m_scrollBarList = new ArrayList();
+            }
+
+            m_scrollBarList.Add(sbj);
+
+            return bRst;
+        }
     }
 
     class WgtItemOutline
@@ -278,6 +315,23 @@ namespace EOS
                     {
 
                     }
+                    else if (0 == key.CompareTo(CfgWgt.WGT_NODE_TYPE_TEXT_BOX))
+                    {
+                        TextBoxJson job = null;
+
+                        try
+                        {
+                            job = (TextBoxJson)JsonConvert.DeserializeObject(strVal, typeof(TextBoxJson));
+                            job.Title = name;
+
+                            wf.AddTextBoxData(job);
+                        }
+                        catch (Exception e)
+                        {
+                            bRst = false;
+                            Console.WriteLine("[E]" + e.Message);
+                        }
+                    }
                     else if (0 == key.CompareTo(CfgWgt.WGT_NODE_TYPE_PUSH_BUTTON))
                     {
                         PushButtonJson job = null;
@@ -293,7 +347,24 @@ namespace EOS
                         {
                             bRst = false;
                             Console.WriteLine("[E]" + e.Message);
-                        }   
+                        }
+                    }
+                    else if (0 == key.CompareTo(CfgWgt.WGT_NODE_TYPE_SCROLL_BAR))
+                    {
+                        ScrollBarJson job = null;
+
+                        try
+                        {
+                            job = (ScrollBarJson)JsonConvert.DeserializeObject(strVal, typeof(ScrollBarJson));
+                            job.Title = name;
+
+                            wf.AddScrollBarData(job);
+                        }
+                        catch (Exception e)
+                        {
+                            bRst = false;
+                            Console.WriteLine("[E]" + e.Message);
+                        }
                     }
                 }
             }
@@ -370,7 +441,8 @@ namespace EOS
             return item;
         }
 
-        public static WgtItemOutline GetWgtItem(string strTitle)
+        /* The wgt item in one project must be unique */
+        public static WgtItemOutline GetWgtItemOutlineByTitle(string strTitle)
         {
             WgtItemOutline item = null;
 
@@ -381,16 +453,70 @@ namespace EOS
 
             foreach (WgtFile wf in m_WgtFileGroup)
             {
-                foreach (BitmapImgJson bij in wf.GetBitmapImgList())
+                /* Check the bitmap image item */
+                if (null != wf.GetBitmapImgList())
                 {
-                    if (0 == bij.Title.CompareTo(strTitle))
+                    foreach (BitmapImgJson bij in wf.GetBitmapImgList())
                     {
-                        item = new WgtItemOutline();
-                        item.Title = strTitle;
-                        item.Path = wf.GetTag();
-                        item.Object = bij;
-                        item.Type = CfgWgt.WgtType.BITMAP_IMG;
-                        break;
+                        if (0 == bij.Title.CompareTo(strTitle))
+                        {
+                            item = new WgtItemOutline();
+                            item.Title = strTitle;
+                            item.Path = wf.GetTag();
+                            item.Object = bij;
+                            item.Type = CfgWgt.WgtType.BITMAP_IMG;
+                            break;
+                        }
+                    }
+                }
+
+                if (null != wf.GetTextBoxList())
+                {
+                    foreach (TextBoxJson tbj in wf.GetTextBoxList())
+                    {
+                        if (0 == tbj.Title.CompareTo(strTitle))
+                        {
+                            item = new WgtItemOutline();
+                            item.Title = strTitle;
+                            item.Path = wf.GetTag();
+                            item.Object = tbj;
+                            item.Type = CfgWgt.WgtType.TEXT_BOX;
+                            break;
+                        }
+                    }
+                }
+
+                /* Check the push button item */
+                if (null != wf.GetPushBtnList())
+                {
+                    foreach (PushButtonJson pbj in wf.GetPushBtnList())
+                    {
+                        if (0 == pbj.Title.CompareTo(strTitle))
+                        {
+                            item = new WgtItemOutline();
+                            item.Title = strTitle;
+                            item.Path = wf.GetTag();
+                            item.Object = pbj;
+                            item.Type = CfgWgt.WgtType.PUSH_BUTTON;
+                            break;
+                        }
+                    }
+                }
+
+                /* Check the scroll bar item */
+                if (null != wf.GetScrollBarList())
+                {
+                    foreach (ScrollBarJson sbj in wf.GetScrollBarList())
+                    {
+                        if (0 == sbj.Title.CompareTo(strTitle))
+                        {
+                            item = new WgtItemOutline();
+                            item.Title = strTitle;
+                            item.Path = wf.GetTag();
+                            item.Object = sbj;
+                            item.Type = CfgWgt.WgtType.SCROLL_BAR;
+                            break;
+                        }
                     }
                 }
             }

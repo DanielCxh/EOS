@@ -24,3 +24,4 @@ F:\GIT\EOS\EOS\obj\x86\Debug\EOS.Properties.Resources.resources
 F:\GIT\EOS\EOS\obj\x86\Debug\EOS.csproj.GenerateResource.Cache
 F:\GIT\EOS\EOS\obj\x86\Debug\EOS.ResEdit.resources
 F:\GIT\EOS\EOS\obj\x86\Debug\EOS.WgtProperty.resources
+F:\GIT\EOS\EOS\obj\x86\Debug\EOS.PreviewPanel.resources

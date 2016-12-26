@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Collections;
-
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -103,7 +101,7 @@ namespace EOS
             return m_instance;
         }
 
-        static public bool SyncResFile(string strWgtFilePath)
+        static public bool SyncResFile(string strResFilePath)
         {
             bool bRst = false;
 

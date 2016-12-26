@@ -16,7 +16,7 @@ namespace EOS
 
         public static void Debug(string strTag, string strContent)
         {
-            string strLog = String.Format("[%s][%s][%s]", LOG_TYPE_DBUG, strTag, strContent);
+            string strLog = String.Format("[{0}][{1}][{2}]", LOG_TYPE_DBUG, strTag, strContent);
 
             Console.WriteLine(strLog);
         }

@@ -15,8 +15,10 @@ namespace EOS
     class Common
     {
         /// <summary>
-        /// Get the content of the file by full file path.
+        ///  Get the content of the file by full file path.
         /// </summary>
+        /// <param name="strPath"></param>
+        /// <returns></returns>
         public static string GetFileContent(string strPath)
         {
             StreamReader sr = new StreamReader(strPath, System.Text.Encoding.Default);
@@ -38,6 +40,31 @@ namespace EOS
             sr.Close();
 
             return strInfo;
+        }
+
+        public static ArrayList GetFileContentLines(string strPath)
+        {
+            ArrayList lines;
+
+            StreamReader sr = new StreamReader(strPath, System.Text.Encoding.Default);
+
+            if (null == sr)
+            {
+                return null;
+            }
+
+            lines = new ArrayList();
+
+            string strLine = "";
+
+            while ((strLine = sr.ReadLine()) != null)
+            {
+                lines.Add(strLine);
+            }
+
+            sr.Close();
+
+            return lines;
         }
 
         public static string GetJsonValueByKey(string strJson, string key)
@@ -85,6 +112,12 @@ namespace EOS
                 bRst = true;
             }
 
+            return bRst;
+        }
+
+        public static bool StrSameVal()
+        {
+            bool bRst = false;
             return bRst;
         }
     }

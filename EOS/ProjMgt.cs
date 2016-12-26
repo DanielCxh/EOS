@@ -44,6 +44,7 @@ namespace EOS
         const string FILE_TYPE_WGT = ".wgt";
         const string FILE_TYPE_TREE = ".tree";
         const string FILE_TYPE_RESOURCE = ".res";
+        const string FILE_TYPE_H = ".h";
 
         private static ProjMgt m_instance = null;
         private static readonly object lockHelper = new object();
@@ -427,6 +428,18 @@ namespace EOS
             return n;
         }
 
+        private bool isFileNode(TreeNode node)
+        {
+            bool bRst = false;
+
+            if (null == node)
+            {
+                return false;
+            }
+
+            return bRst;
+        }
+
         private void loadFileNode(TreeNode node)
         {
             if (null == node)
@@ -456,13 +469,17 @@ namespace EOS
 
                 loadResContent(node);
             }
+            else if (CfgUser.IsHeadFile(node))
+            {
+                loadHeadContent(node);
+            }
             else if (CfgWgt.IsWgtNode(node))
             {
-               // Console.WriteLine("wgt::::" + node.FullPath);
+                // Console.WriteLine("wgt::::" + node.FullPath);
             }
             else
             {
-               // Console.WriteLine("ote::::" + node.FullPath);
+                // Console.WriteLine("ote::::" + node.FullPath);
             }
         }
 
@@ -497,6 +514,16 @@ namespace EOS
             }
 
             TreeData.SyncTreeFile(GetNodeFullPath(node));
+        }
+
+        private void loadHeadContent(TreeNode node)
+        {
+            if (null == node)
+            {
+                return;
+            }
+
+            UserData.GetInstance().syncUserFile(GetNodeFullPath(node));
         }
 
         /// <summary>

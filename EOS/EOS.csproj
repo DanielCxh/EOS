@@ -55,6 +55,7 @@
     <Compile Include="BitmapImg.cs" />
     <Compile Include="CfgRes.cs" />
     <Compile Include="CfgTree.cs" />
+    <Compile Include="CfgUser.cs" />
     <Compile Include="CfgWgt.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="DrawMgt.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="StringRes.cs" />
     <Compile Include="StatusBarMgt.cs" />
     <Compile Include="TreeData.cs" />
+    <Compile Include="UserData.cs" />
     <Compile Include="WgtData.cs" />
     <Compile Include="WgtProperty.cs">
       <SubType>Form</SubType>

@@ -39,6 +39,12 @@
             this.editMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stringEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.docSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusBarInfo = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SplitContainerFull = new System.Windows.Forms.SplitContainer();
@@ -46,12 +52,9 @@
             this.ProjTreeImgList = new System.Windows.Forms.ImageList(this.components);
             this.SplitContainerDetail = new System.Windows.Forms.SplitContainer();
             this.FreePanel = new System.Windows.Forms.Panel();
-            this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.previewSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.docSubMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuDrawPanel = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.TitleBG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResizeImg)).BeginInit();
@@ -62,6 +65,7 @@
             this.SplitContainerFull.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).BeginInit();
             this.SplitContainerDetail.SuspendLayout();
+            this.contextMenuDrawPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // TitleBG
@@ -166,8 +170,51 @@
             // stringEditToolStripMenuItem
             // 
             this.stringEditToolStripMenuItem.Name = "stringEditToolStripMenuItem";
-            this.stringEditToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stringEditToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.stringEditToolStripMenuItem.Text = "String Edit";
+            // 
+            // viewMenuItem
+            // 
+            this.viewMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.previewSubMenuItem});
+            this.viewMenuItem.Name = "viewMenuItem";
+            this.viewMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.viewMenuItem.Text = "View";
+            // 
+            // previewSubMenuItem
+            // 
+            this.previewSubMenuItem.Name = "previewSubMenuItem";
+            this.previewSubMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.previewSubMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.previewSubMenuItem.Text = "Preview";
+            this.previewSubMenuItem.Click += new System.EventHandler(this.previewSubMenuItem_Click);
+            // 
+            // helpMenuItem
+            // 
+            this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.docSubMenuItem,
+            this.toolStripSeparator1,
+            this.aboutSubMenuItem});
+            this.helpMenuItem.Name = "helpMenuItem";
+            this.helpMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.helpMenuItem.Text = "Help";
+            // 
+            // docSubMenuItem
+            // 
+            this.docSubMenuItem.Name = "docSubMenuItem";
+            this.docSubMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.docSubMenuItem.Text = "Document";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(132, 6);
+            // 
+            // aboutSubMenuItem
+            // 
+            this.aboutSubMenuItem.Name = "aboutSubMenuItem";
+            this.aboutSubMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.aboutSubMenuItem.Text = "About";
             // 
             // StatusBarInfo
             // 
@@ -244,9 +291,14 @@
             this.SplitContainerDetail.Panel1.BackColor = System.Drawing.Color.DimGray;
             this.SplitContainerDetail.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.SplitContainerDetail_Panel1_Paint);
             this.SplitContainerDetail.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseClick);
+            this.SplitContainerDetail.Panel1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseDoubleClick);
+            this.SplitContainerDetail.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseDown);
+            this.SplitContainerDetail.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseMove);
+            this.SplitContainerDetail.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseUp);
             // 
             // SplitContainerDetail.Panel2
             // 
+            this.SplitContainerDetail.Panel2.AutoScroll = true;
             this.SplitContainerDetail.Panel2.BackColor = System.Drawing.Color.Maroon;
             this.SplitContainerDetail.Panel2.SizeChanged += new System.EventHandler(this.SplitContainerDetail_Panel2_SizeChanged);
             this.SplitContainerDetail.Size = new System.Drawing.Size(530, 400);
@@ -260,48 +312,23 @@
             this.FreePanel.Size = new System.Drawing.Size(10, 10);
             this.FreePanel.TabIndex = 0;
             // 
-            // viewMenuItem
+            // contextMenuDrawPanel
             // 
-            this.viewMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.previewSubMenuItem});
-            this.viewMenuItem.Name = "viewMenuItem";
-            this.viewMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.viewMenuItem.Text = "View";
+            this.contextMenuDrawPanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemOpen});
+            this.contextMenuDrawPanel.Name = "contextMenuDraw";
+            this.contextMenuDrawPanel.Size = new System.Drawing.Size(194, 26);
             // 
-            // previewSubMenuItem
+            // toolStripMenuItemOpen
             // 
-            this.previewSubMenuItem.Name = "previewSubMenuItem";
-            this.previewSubMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.previewSubMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.previewSubMenuItem.Text = "Preview";
-            this.previewSubMenuItem.Click += new System.EventHandler(this.previewSubMenuItem_Click);
+            this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(193, 22);
+            this.toolStripMenuItemOpen.Text = "Open Selected WGT";
             // 
-            // helpMenuItem
+            // contextMenuStrip2
             // 
-            this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.docSubMenuItem,
-            this.toolStripSeparator1,
-            this.aboutSubMenuItem});
-            this.helpMenuItem.Name = "helpMenuItem";
-            this.helpMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.helpMenuItem.Text = "Help";
-            // 
-            // aboutSubMenuItem
-            // 
-            this.aboutSubMenuItem.Name = "aboutSubMenuItem";
-            this.aboutSubMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.aboutSubMenuItem.Text = "About";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // docSubMenuItem
-            // 
-            this.docSubMenuItem.Name = "docSubMenuItem";
-            this.docSubMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.docSubMenuItem.Text = "Document";
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
             // Main
             // 
@@ -338,6 +365,7 @@
             this.SplitContainerFull.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).EndInit();
             this.SplitContainerDetail.ResumeLayout(false);
+            this.contextMenuDrawPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -367,5 +395,8 @@
         private System.Windows.Forms.ToolStripMenuItem aboutSubMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem docSubMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuDrawPanel;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
     }
 }

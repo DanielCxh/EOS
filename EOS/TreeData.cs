@@ -61,15 +61,21 @@ namespace EOS
 
             if (Common.IsStrEmpty(strKey) || null == m_nodeList)
             {
+                LogMgt.Debug("TreeData.GetTreeNodeByKey", "null");
                 return null;
             }
 
-            foreach (TreeNodeJson tnj in m_nodeList)
+            LogMgt.Debug("TreeData.GetTreeNodeByKey", strKey);
+
+            if (0 < m_nodeList.Count)
             {
-                if (0 == tnj.Title.CompareTo(strKey))
+                foreach (TreeNodeJson tnj in m_nodeList)
                 {
-                    treeNode = tnj;
-                    break;
+                    if (null != tnj && null != tnj.Title && 0 == tnj.Title.CompareTo(strKey))
+                    {
+                        treeNode = tnj;
+                        return treeNode;
+                    }
                 }
             }
 
@@ -187,13 +193,24 @@ namespace EOS
                     tf.AddTreeNode(job);
 
                     // Add resource date
-                    m_TreeNodeResDataGroup.Add(AnalyzeTreeNodeRes(key, job.Resource));
+                    NodeResData nrd = AnalyzeTreeNodeRes(key, job.Resource);
+
+                    if (null != nrd)
+                    {
+                        m_TreeNodeResDataGroup.Add(nrd);
+                        LogMgt.Debug("TreeData.SyncTreeFile", "Loaded :" + key);
+                    }
+                    else
+                    {
+                        LogMgt.Debug("TreeData.SyncTreeFile", "NOT Load :" + key);
+                    }
                     
                     bRst = true;
                 }
                 catch(Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    LogMgt.Debug("TreeData.SyncTreeFile", key +":"+strJsonVal);
                     bRst = false;
                 }
             }
@@ -226,26 +243,30 @@ namespace EOS
 
         public static NodeResData AnalyzeTreeNodeRes(string strItemName, string[] strRes)
         {
-            NodeResData nrd = null;
+            NodeResData nrd = new NodeResData();
 
             string str = strRes[0];
 
-            if (Common.IsStrEmpty(str))
+            /* With resource info */
+            if (false == Common.IsStrEmpty(str) && str.Contains('@'))
             {
-                return null;
+                string[] strContent = str.Split('@');
+
+                if (strContent.Length != 2)
+                {
+                    return null;
+                }
+
+                nrd.Key = strContent[0];
+                nrd.ResFile = strContent[1];
+            }
+            /* No resource info */
+            else
+            {
+                nrd.Key = null;
+                nrd.ResFile = null;
             }
 
-            string[] strContent = str.Split('@');
-
-            if (strContent.Length != 2)
-            {
-                return null;
-            }
-
-            nrd = new NodeResData();
-
-            nrd.Key = strContent[0];
-            nrd.ResFile = strContent[1];
             nrd.Title = strItemName;
 
             return nrd;
@@ -253,6 +274,8 @@ namespace EOS
 
         public static NodeResData GetNodeResByTitle(string strTitle)
         {
+            LogMgt.Debug("TreeData.GetNodeResByTitle", strTitle);
+
             NodeResData nodeRes = null;
 
             if (Common.IsStrEmpty(strTitle))
@@ -262,17 +285,26 @@ namespace EOS
 
             if (null == m_TreeNodeResDataGroup)
             {
-                LogMgt.Debug("GetNodeResByTitle", "m_TreeNodeResDataGroup is null");
+                LogMgt.Debug("TreeData.GetNodeResByTitle", "m_TreeNodeResDataGroup is null");
                 return null;
             }
 
-            foreach (NodeResData nrd in m_TreeNodeResDataGroup)
+            if (0 < m_TreeNodeResDataGroup.Count)
             {
-                if (0 == nrd.Title.CompareTo(strTitle))
+                foreach (NodeResData nrd in m_TreeNodeResDataGroup)
                 {
-                    nodeRes = nrd;
-                    break;
+                    if (null != nrd && null != nrd.Title && 0 == nrd.Title.CompareTo(strTitle))
+                    {
+                        nodeRes = nrd;
+                        return nodeRes;
+                    }
                 }
+
+                LogMgt.Debug("TreeData.GetNodeResByTitle", "not find : " + strTitle);
+            }
+            else
+            {
+                LogMgt.Debug("TreeData.GetNodeResByTitle", "m_TreeNodeResDataGroup is empty");
             }
 
             return nodeRes;
@@ -280,22 +312,26 @@ namespace EOS
 
         public static TreeNodeJson GetTreeNode(string strTitle)
         {
+            LogMgt.Debug("TreeData.GetTreeNode", "");
+
             TreeNodeJson node = null;
 
-            if (Common.IsStrEmpty(strTitle)
-                || null == m_TreeFileGroup)
+            if (Common.IsStrEmpty(strTitle))
             {
                 return null;
             }
 
-            foreach (TreeFile tf in m_TreeFileGroup)
+            if (null != m_TreeFileGroup && 0 < m_TreeFileGroup.Count)
             {
-                TreeNodeJson tnj = tf.GetTreeNodeByKey(strTitle);
-
-                if (null != tnj)
+                foreach (TreeFile tf in m_TreeFileGroup)
                 {
-                    node = tnj;
-                    break;
+                    TreeNodeJson tnj = tf.GetTreeNodeByKey(strTitle);
+
+                    if (null != tnj)
+                    {
+                        node = tnj;
+                        return node;
+                    }
                 }
             }
 

@@ -97,6 +97,12 @@
     <Compile Include="StringRes.cs" />
     <Compile Include="StatusBarMgt.cs" />
     <Compile Include="TreeData.cs" />
+    <Compile Include="TreeProperty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreeProperty.Designer.cs">
+      <DependentUpon>TreeProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserData.cs" />
     <Compile Include="WgtData.cs" />
     <Compile Include="WgtProperty.cs">
@@ -126,6 +132,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TreeProperty.resx">
+      <DependentUpon>TreeProperty.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WgtProperty.resx">
       <DependentUpon>WgtProperty.cs</DependentUpon>
     </EmbeddedResource>

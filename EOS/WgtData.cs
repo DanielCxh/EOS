@@ -444,78 +444,84 @@ namespace EOS
         /* The wgt item in one project must be unique */
         public static WgtItemOutline GetWgtItemOutlineByTitle(string strTitle)
         {
+            LogMgt.Debug("WgtData.GetWgtItemOutlineByTitle", "");
+
             WgtItemOutline item = null;
 
             if (Common.IsStrEmpty(strTitle) || null == m_WgtFileGroup || 0 >= m_WgtFileGroup.Count)
             {
+                LogMgt.Debug("WgtData.GetWgtItemOutlineByTitle", "Not null check.");
                 return null;
             }
 
-            foreach (WgtFile wf in m_WgtFileGroup)
+            if (null != m_WgtFileGroup)
             {
-                /* Check the bitmap image item */
-                if (null != wf.GetBitmapImgList())
+                foreach (WgtFile wf in m_WgtFileGroup)
                 {
-                    foreach (BitmapImgJson bij in wf.GetBitmapImgList())
+                    /* Check the bitmap image item */
+                    if (null != wf.GetBitmapImgList() && 0 < wf.GetBitmapImgList().Count)
                     {
-                        if (0 == bij.Title.CompareTo(strTitle))
+                        foreach (BitmapImgJson bij in wf.GetBitmapImgList())
                         {
-                            item = new WgtItemOutline();
-                            item.Title = strTitle;
-                            item.Path = wf.GetTag();
-                            item.Object = bij;
-                            item.Type = CfgWgt.WgtType.BITMAP_IMG;
-                            break;
+                            if (0 == bij.Title.CompareTo(strTitle))
+                            {
+                                item = new WgtItemOutline();
+                                item.Title = strTitle;
+                                item.Path = wf.GetTag();
+                                item.Object = bij;
+                                item.Type = CfgWgt.WgtType.BITMAP_IMG;
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (null != wf.GetTextBoxList())
-                {
-                    foreach (TextBoxJson tbj in wf.GetTextBoxList())
+                    if (null != wf.GetTextBoxList() && 0 < wf.GetTextBoxList().Count)
                     {
-                        if (0 == tbj.Title.CompareTo(strTitle))
+                        foreach (TextBoxJson tbj in wf.GetTextBoxList())
                         {
-                            item = new WgtItemOutline();
-                            item.Title = strTitle;
-                            item.Path = wf.GetTag();
-                            item.Object = tbj;
-                            item.Type = CfgWgt.WgtType.TEXT_BOX;
-                            break;
+                            if (0 == tbj.Title.CompareTo(strTitle))
+                            {
+                                item = new WgtItemOutline();
+                                item.Title = strTitle;
+                                item.Path = wf.GetTag();
+                                item.Object = tbj;
+                                item.Type = CfgWgt.WgtType.TEXT_BOX;
+                                break;
+                            }
                         }
                     }
-                }
 
-                /* Check the push button item */
-                if (null != wf.GetPushBtnList())
-                {
-                    foreach (PushButtonJson pbj in wf.GetPushBtnList())
+                    /* Check the push button item */
+                    if (null != wf.GetPushBtnList() && 0 < wf.GetPushBtnList().Count)
                     {
-                        if (0 == pbj.Title.CompareTo(strTitle))
+                        foreach (PushButtonJson pbj in wf.GetPushBtnList())
                         {
-                            item = new WgtItemOutline();
-                            item.Title = strTitle;
-                            item.Path = wf.GetTag();
-                            item.Object = pbj;
-                            item.Type = CfgWgt.WgtType.PUSH_BUTTON;
-                            break;
+                            if (0 == pbj.Title.CompareTo(strTitle))
+                            {
+                                item = new WgtItemOutline();
+                                item.Title = strTitle;
+                                item.Path = wf.GetTag();
+                                item.Object = pbj;
+                                item.Type = CfgWgt.WgtType.PUSH_BUTTON;
+                                break;
+                            }
                         }
                     }
-                }
 
-                /* Check the scroll bar item */
-                if (null != wf.GetScrollBarList())
-                {
-                    foreach (ScrollBarJson sbj in wf.GetScrollBarList())
+                    /* Check the scroll bar item */
+                    if (null != wf.GetScrollBarList() && 0 < wf.GetScrollBarList().Count)
                     {
-                        if (0 == sbj.Title.CompareTo(strTitle))
+                        foreach (ScrollBarJson sbj in wf.GetScrollBarList())
                         {
-                            item = new WgtItemOutline();
-                            item.Title = strTitle;
-                            item.Path = wf.GetTag();
-                            item.Object = sbj;
-                            item.Type = CfgWgt.WgtType.SCROLL_BAR;
-                            break;
+                            if (0 == sbj.Title.CompareTo(strTitle))
+                            {
+                                item = new WgtItemOutline();
+                                item.Title = strTitle;
+                                item.Path = wf.GetTag();
+                                item.Object = sbj;
+                                item.Type = CfgWgt.WgtType.SCROLL_BAR;
+                                break;
+                            }
                         }
                     }
                 }

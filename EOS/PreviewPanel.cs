@@ -23,8 +23,8 @@ namespace EOS
 
         private void PreviewPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            string strItem = DrawMgt.GetDrawedElement(e.X, e.Y);
-            Console.WriteLine(strItem);
+           // string strItem = DrawMgt.GetDrawedElement(e.X, e.Y);
+            //Console.WriteLine(strItem);
         }
     }
 }

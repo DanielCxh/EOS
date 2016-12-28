@@ -14,15 +14,27 @@ namespace EOS
         StartUp m_Startup = null;
         bool m_bPressTitleBar = false;
         bool m_bMouseDown = false;
+        bool m_bCanvasMouseDown = false;
+        TreeNodeJson m_movedTreeNode = null;
+
+        int m_iCanvasBaseX = -1;
+        int m_iCanvasBaseY = -1;
+        int m_iEleX = -1;
+        int m_iEleY = -1;
 
         TreeNode m_crtNode = null;
 
         MouseDirection direction = MouseDirection.None;
 
-        int m_iBaseX;
-        int m_iBaseY;
+        int m_iBaseX = -1;
+        int m_iBaseY = -1;
+       
+        TreeNodeJson selectTreeNode = null;
 
         WgtProperty wp = null;
+        TreeProperty tp = null;
+
+        DrawMgt detailPanel = null;
 
         public enum MouseDirection
         {
@@ -47,6 +59,9 @@ namespace EOS
             }
 
             m_Startup.Hide();
+
+            this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -122,7 +137,8 @@ namespace EOS
 
         private void TitleBG_MouseMove(object sender, MouseEventArgs e)
         {
-            if (true == m_bPressTitleBar)
+            /* Press title bar and current window is not max size. */
+            if (true == m_bPressTitleBar && this.WindowState != FormWindowState.Maximized)
             {
                 this.Location = new Point(this.Location.X + e.X - m_iBaseX, this.Location.Y + e.Y - m_iBaseY);
             }
@@ -181,7 +197,7 @@ namespace EOS
         private void ProjectTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             string strExt = "";
-            bool showPropertyPanel = false;
+            bool showWgtPropertyPanel = false;
 
             if (null != wp)
             {
@@ -190,8 +206,8 @@ namespace EOS
 
             if (e.Node.FullPath.EndsWith(".png") || e.Node.FullPath.EndsWith(".jpg"))
             {
-                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
-                DrawMgt.DrawNode(e.Node);
+                detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+                detailPanel.DrawNode(e.Node);
                 m_crtNode = e.Node;
 
                 return;
@@ -202,25 +218,24 @@ namespace EOS
                 ResEdit re = new ResEdit(ProjMgt.GetInstance().GetProjectResLoc() + "\\" + e.Node.Parent.FullPath);
                 re.Show();
             }
-
-            if (CfgWgt.IsWgtNode(e.Node))
+            else if (CfgWgt.IsWgtNode(e.Node))
             {
-                 DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
-                 DrawMgt.DrawNode(e.Node);
+                LogMgt.Debug("Main.ProjectTree_NodeMouseDoubleClick", "Is wgt node.");
+
+                 detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+                 detailPanel.DrawNode(e.Node);
                  m_crtNode = e.Node;
 
-                 showPropertyPanel = true;
+                 showWgtPropertyPanel = true;
             }
             else if (ProjMgt.NodeDetailType.NT_TREE_ITEM == ProjMgt.GetNoteDetailType(e.Node))
             {
-                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
-                DrawMgt.DrawNode(e.Node);
-                m_crtNode = e.Node;
+                onShowTreeNode(e.Node);
 
-                showPropertyPanel = false;
+                showWgtPropertyPanel = false;
             }
 
-            if (true == showPropertyPanel)
+            if (true == showWgtPropertyPanel)
             {
                 SplitContainerDetail.Panel2.Controls.Clear();
 
@@ -326,29 +341,137 @@ namespace EOS
         {
             if (null != m_crtNode)
             {
-                DrawMgt.SetCanvas(SplitContainerDetail.Panel1);
-                DrawMgt.DrawNode(m_crtNode);
+                detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+                detailPanel.DrawNode(m_crtNode);
             }
         }
 
         private void SplitContainerDetail_Panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            Console.WriteLine(e.X + ":" + e.Y);
+            
+        }
+
+        private void SplitContainerDetail_Panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                //string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
+
+                detailPanel.DrawSelectCursor(e.X, e.Y);
+
+                m_iCanvasBaseX = e.X;
+                m_iCanvasBaseY = e.Y;
+                
+
+                string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
+                m_movedTreeNode = TreeData.GetTreeNode(strName);
+
+                if (null != m_movedTreeNode)
+                {
+                    int.TryParse(m_movedTreeNode.X.ToString(), out m_iEleX);
+                    int.TryParse(m_movedTreeNode.Y.ToString(), out m_iEleY);
+                }
+
+                m_bCanvasMouseDown = true;
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                Console.WriteLine(e.X + ":" + e.Y);
+                //contextMenuDraw.Show();
+                SplitContainerDetail.Panel1.ContextMenuStrip = contextMenuDrawPanel;
+
+            }
+        }
+
+        private void SplitContainerDetail_Panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_bCanvasMouseDown = false;
+            m_movedTreeNode = null;
+        }
+
+        private void SplitContainerDetail_Panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (true == m_bCanvasMouseDown && null != m_movedTreeNode)
+            {
+
+                if (-1 != m_iEleX && -1 != m_iEleY)
+                {
+                    m_movedTreeNode.X = (m_iEleX + (e.X - m_iCanvasBaseX)).ToString();
+                    m_movedTreeNode.Y = (m_iEleY + (e.Y - m_iCanvasBaseY)).ToString();
+
+                    Console.WriteLine("{0},{1}", m_movedTreeNode.X, m_movedTreeNode.Y);
+                    detailPanel.DrawNode(m_crtNode);
+                    //detailPanel.DrawSelectCursor((m_iEleX + (e.X - m_iCanvasBaseX)), (m_iEleY + (e.Y - m_iCanvasBaseY)));
+                }
+            }
+        }
+
+        private void SplitContainerDetail_Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "");
+
+                string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
+                m_movedTreeNode = TreeData.GetTreeNode(strName);
+
+                TreeNode tn = ProjMgt.GetInstance().GetTreeNodeByTitle(null, m_movedTreeNode.Title);
+
+                if (null != tn)
+                {
+                    onShowTreeNode(tn);
+                }
+            }
         }
 
         private void previewSubMenuItem_Click(object sender, EventArgs e)
         {
             if (null != m_crtNode)
             {
+                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "Show preview panel.");
+
                 PreviewPanel panel = new PreviewPanel();
 
-                DrawMgt.SetCanvas(panel);
+                DrawMgt dm = new DrawMgt(panel);
 
                 panel.Show();
 
                 /* Need show panel first than draw graphic */
-                DrawMgt.DrawNode(m_crtNode);
+                dm.DrawNode(m_crtNode);
             }
+            else 
+            {
+                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "Current tree node is null.");
+            }
+        }
+
+        /*************************************************************************/
+
+        private void onShowTreeNode(TreeNode node)
+        {
+            LogMgt.Debug("onShowTreeNode", "");
+
+            if (null != detailPanel)
+            {
+                detailPanel.clearAll();
+            }
+
+            detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+            detailPanel.DrawNode(node);
+            m_crtNode = node;
+
+            SplitContainerDetail.Panel2.Controls.Clear();
+
+            selectTreeNode = TreeData.GetTreeNode(node.Text);
+
+            tp = new TreeProperty();
+            tp.TopLevel = false;
+            tp.Width = SplitContainerDetail.Panel2.Width - 16;
+
+            SplitContainerDetail.Panel2.Controls.Add(tp);
+            tp.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+
+            tp.Show();
         }
     }
 }

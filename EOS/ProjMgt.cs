@@ -56,7 +56,7 @@ namespace EOS
         private int iScreenWidth;
         private int iScreenHeight;
 
-        private TreeView m_projectTree = null;
+        private static TreeView m_projectTree = null;
 
         public enum NodeDetailType
         {
@@ -584,6 +584,71 @@ namespace EOS
           
 
             return nodeType;
+        }
+
+        public TreeNode GetTreeNodeByTitle(TreeNode rootNode, string strTitle)
+        {
+            TreeNode node = null;
+
+            if (Common.IsStrEmpty(strTitle) || null == m_projectTree)
+            {
+                return null;
+            }
+
+            if (null == rootNode)
+            {
+                foreach (TreeNode tn in m_projectTree.Nodes)
+                {
+                    Console.WriteLine(tn.Nodes.Count);
+
+                    if (0 < tn.Nodes.Count)
+                    {
+                        node = GetTreeNodeByTitle(tn, strTitle);
+
+                        if (null != node)
+                        {
+                            return node;
+                        }
+                    }
+                    else if (0 == tn.Text.CompareTo(strTitle))
+                    {
+                        node = tn;
+                        return node;
+                    }
+                    else
+                    {
+                        /* Do nothing. */
+                    }
+                }
+            }
+            else
+            {
+                foreach (TreeNode tn in rootNode.Nodes)
+                {
+                    Console.WriteLine(tn.Text.ToString());
+
+                    if (0 < tn.Nodes.Count)
+                    {
+                        node = GetTreeNodeByTitle(tn, strTitle);
+
+                        if (null != node)
+                        {
+                            return node;
+                        }
+                    }
+                    else if (0 == tn.Text.CompareTo(strTitle))
+                    {
+                        node = tn;
+                        return node;
+                    }
+                    else
+                    {
+                        /* Do nothing. */
+                    }
+                }
+            }
+
+            return node;
         }
     }
 }

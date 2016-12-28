@@ -135,10 +135,12 @@ namespace EOS
             // tmp
             decodeUserFile(getFileByTag(strUserFilePath));
 
+            /*
             foreach (UserDefine ud in getFileByTag(strUserFilePath).GetDataList())
             {
                 Console.WriteLine(String.Format("{0}:{1}:{2}", ud.DefineName, ud.DefineVal, ud.DefineNum));
             }
+             * */
             
             return bRst;
         }

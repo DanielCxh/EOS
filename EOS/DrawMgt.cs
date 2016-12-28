@@ -64,43 +64,74 @@ namespace EOS
 
     class DrawMgt
     {
-        public static Graphics m_graphics = null;
-        private static Size m_panelSize = new Size(0, 0);
+        private Graphics m_realGraphics = null;
+        private Graphics m_graphics = null;
+        private Size m_panelSize = new Size(0, 0);
+
+        private Bitmap bmp = null;
 
         /* Used to save all drowed element */
         private static ArrayList m_elementList = new ArrayList();
+        private TreeNode currentNode = null;
 
-        public DrawMgt()
-        {
- 
-        }
+        Color selectCursorColor = Color.Red;
 
-        public static void SetCanvas(Panel panel)
+        public DrawMgt(Panel panel)
         {
             if (null != panel)
             {
                 m_panelSize = new Size(panel.Width, panel.Height);
-                m_graphics = panel.CreateGraphics();
+                m_realGraphics = panel.CreateGraphics();
+                bmp = new Bitmap(m_panelSize.Width, m_panelSize.Height);
+                m_graphics = Graphics.FromImage(bmp);
             }
         }
 
-        public static void SetCanvas(Form form)
+        public DrawMgt(Form form)
         {
             if (null != form)
             {
                 m_panelSize = new Size(form.Width, form.Height);
-                m_graphics = form.CreateGraphics();
+                m_realGraphics = form.CreateGraphics();
+                bmp = new Bitmap(m_panelSize.Width, m_panelSize.Height);
+                m_graphics = Graphics.FromImage(bmp);
             }
         }
 
-        public static void DrawNode(TreeNode node)
+        public void SetCanvas(Panel panel)
         {
-            if (null == m_graphics)
+            if (null != panel)
             {
+                m_panelSize = new Size(panel.Width, panel.Height);
+                m_realGraphics = panel.CreateGraphics();
+                bmp = new Bitmap(m_panelSize.Width, m_panelSize.Height);
+                m_graphics = Graphics.FromImage(bmp);
+            }
+        }
+
+        public void SetCanvas(Form form)
+        {
+            if (null != form)
+            {
+                m_panelSize = new Size(form.Width, form.Height);
+                m_realGraphics = form.CreateGraphics();
+                bmp = new Bitmap(m_panelSize.Width, m_panelSize.Height);
+                m_graphics = Graphics.FromImage(bmp);
+            }
+        }
+
+        public void DrawNode(TreeNode node)
+        {
+            LogMgt.Debug("DrawMgt.DrawNode", "");
+
+            if (null == m_graphics || null == bmp || null == m_realGraphics)
+            {
+                LogMgt.Debug("DrawMgt.DrawNode", "Not null check");
                 return;
             }
 
-            m_graphics.Clear(Color.White);
+            clearCanvas();
+            currentNode = node;
 
             // Wgt
             if (ProjMgt.NodeDetailType.NT_WGT_BITMAP_IMG == ProjMgt.GetNoteDetailType(node))
@@ -118,9 +149,14 @@ namespace EOS
             {
                 DrawPictureNode(node);
             }
+
+            if (null != m_realGraphics && null != bmp)
+            {
+                m_realGraphics.DrawImage(bmp, 0, 0);
+            }
         }
 
-        public static void DrawWgtNode(TreeNode node)
+        public void DrawWgtNode(TreeNode node)
         {
             // file name
             /*
@@ -143,14 +179,19 @@ namespace EOS
             DrawWgtItem(node.Text, node.Text);
         }
 
-        public static void DrawWgtBitmapImg(BitmapImgJson bij, string treeItemTitle, int iLocX = 0, int iLocY = 0)
+        public void DrawWgtBitmapImg(BitmapImgJson bij, string treeItemTitle, int iLocX = 0, int iLocY = 0)
         {
+            LogMgt.Debug("DrawMgt.DrawWgtBitmapImg", "");
+
             if (null == bij)
             {
                 return;
             }
 
             string strPath = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + bij.FileName;
+
+            LogMgt.Debug("DrawMgt.DrawWgtBitmapImg", strPath);
+
             DrawPicture(treeItemTitle, strPath, iLocX, iLocY);
         }
 
@@ -169,7 +210,7 @@ namespace EOS
  
         }
 
-        public static bool DrawPictureNode(TreeNode node)
+        public bool DrawPictureNode(TreeNode node)
         {
             bool bRst = false;
             if (null == m_graphics)
@@ -201,7 +242,7 @@ namespace EOS
             return bRst;
         }
 
-        public static bool DrawPicture(string treeItemTitle, string strFilePath, int iLocX = 0, int iLocY = 0)
+        public bool DrawPicture(string treeItemTitle, string strFilePath, int iLocX = 0, int iLocY = 0)
         {
             if (Common.IsStrEmpty(strFilePath))
             {
@@ -236,20 +277,24 @@ namespace EOS
             return true;
         }
 
-        public static void DrawTree(TreeNode node)
+        public void DrawTree(TreeNode node)
         {
+            LogMgt.Debug("DrawMgt.DrawTree", "");
+
             if (null == node)
             {
+                LogMgt.Debug("DrawMgt.DrawTree", "Not null check");
                 return;
             }
 
             string strKey = node.Text.ToString();
-            string strTag = ProjMgt.GetInstance().GetProjectResLoc() + "\\" + node.Parent.FullPath;
+            string strTag = ProjMgt.GetInstance().GetNodeFullPath(node.Parent);
 
             TreeFile tf = TreeData.GetTreeFileByTag(strTag);
 
             if (null == tf)
             {
+                LogMgt.Debug("DrawMgt.DrawTree", "Tree file is null return.");
                 return;
             }
 
@@ -261,7 +306,7 @@ namespace EOS
             }
         }
 
-        public static void DrawWgtPushButton(PushButtonJson button, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
+        public void DrawWgtPushButton(PushButtonJson button, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
         {
             if (null == button)
             {
@@ -274,7 +319,7 @@ namespace EOS
             }
         }
 
-        public static void DrawWgtTextBox(TextBoxJson textBox, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
+        public void DrawWgtTextBox(TextBoxJson textBox, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
         {
             if (null == textBox)
             {
@@ -296,7 +341,7 @@ namespace EOS
             // Show more indicator
         }
 
-        public static void DrawWgtItem(string strWgtTitle, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
+        public void DrawWgtItem(string strWgtTitle, string treeItemTitle, int iParLocX = 0, int iParLocY = 0)
         {
             WgtItemOutline item = WgtData.GetWgtItemOutlineByTitle(strWgtTitle);
 
@@ -321,11 +366,19 @@ namespace EOS
             }
         }
 
-        public static void DrawTreeNode(string strNodeTitle, int iParentLocX = 0, int iParentLocY = 0)
+        public void DrawTreeNode(string strNodeTitle, int iParentLocX = 0, int iParentLocY = 0)
         {
+            LogMgt.Debug("DrawMgt.DrawTreeNode", "");
+
             TreeNodeJson tnj = TreeData.GetTreeNode(strNodeTitle);
 
             NodeResData nrd = TreeData.GetNodeResByTitle(strNodeTitle);
+
+            if (null == nrd)
+            {
+                LogMgt.Debug("DrawMgt.DrawTreeNode", "nrd is null");
+                return;
+            }
 
             WgtItemOutline item = WgtData.GetWgtItemOutlineByTitle(nrd.Key);
 
@@ -342,7 +395,9 @@ namespace EOS
 
                 if (CfgWgt.WgtType.BITMAP_IMG == item.Type)
                 {
+                    LogMgt.Debug("DrawMgt.DrawTreeNode", "DrawWgtBitmapImg:START");
                     DrawWgtBitmapImg((BitmapImgJson)item.Object, strNodeTitle, iLocX, iLocY);
+                    LogMgt.Debug("DrawMgt.DrawTreeNode", "DrawWgtBitmapImg:END");
                 }
                 else if (CfgWgt.WgtType.SOLID_IMG == item.Type)
                 {
@@ -354,7 +409,9 @@ namespace EOS
                 }
                 else if (CfgWgt.WgtType.PUSH_BUTTON == item.Type)
                 {
+                    LogMgt.Debug("DrawMgt.DrawTreeNode", "DrawWgtPushButton:START");
                     DrawWgtPushButton((PushButtonJson)item.Object, strNodeTitle, iLocX, iLocY);
+                    LogMgt.Debug("DrawMgt.DrawTreeNode", "DrawWgtPushButton:END");
                 }
                 else if (CfgWgt.WgtType.SCROLL_BAR == item.Type)
                 {
@@ -369,14 +426,24 @@ namespace EOS
                     //Console.WriteLine(strNodeTitle);
                 }
             }
+            else
+            {
+                LogMgt.Debug("DrawMgt.DrawTreeNode", "Item is null");
+            }
 
             /* Scan children nodes */
             if (null != tnj && 0 < tnj.Children.Length)
             {
+                LogMgt.Debug("DrawMgt.DrawTreeNode", "tnj children size = " + tnj.Children.Length);
+
                 foreach (string str in tnj.Children)
                 {
                     DrawTreeNode(str);
                 }
+            }
+            else
+            {
+                LogMgt.Debug("DrawMgt.DrawTreeNode", "tnj no children");
             }
         }
 
@@ -390,15 +457,16 @@ namespace EOS
 
             // Picture node
 
+
             // .h node
         }
 
-        public static void SaveDrawedElement(DrawElement de)
+        public void SaveDrawedElement(DrawElement de)
         {
             m_elementList.Add(de);
         }
 
-        public static string GetDrawedElement(int iX, int iY)
+        public string GetDrawedElementTitle(int iX, int iY)
         {
             string strTitle = null;
             int iWidth = 0;
@@ -434,8 +502,83 @@ namespace EOS
             {
                 strTitle = tmpDe.Title;
             }
-
+            //Console.WriteLine(strTitle);
             return strTitle;
+        }
+
+        public DrawElement GetDrawedElement(int iX, int iY)
+        {
+            int iWidth = 0;
+            int iHeight = 0;
+
+            DrawElement tmpDe = null;
+
+            if (null == m_elementList)
+            {
+                return null;
+            }
+
+            foreach (DrawElement de in m_elementList)
+            {
+                if (de.OnElement(iX, iY))
+                {
+                    if (0 == iWidth && 0 == iHeight)
+                    {
+                        iWidth = de.Width;
+                        iHeight = de.Height;
+                        tmpDe = de;
+                    }
+                    else if (iWidth >= de.Width && iHeight >= de.Height)
+                    {
+                        iWidth = de.Width;
+                        iHeight = de.Height;
+                        tmpDe = de;
+                    }
+                }
+            }
+
+            return tmpDe;
+        }
+
+        public void DrawSelectCursor(int locX, int locY)
+        {
+            if (null == m_graphics)
+            {
+                LogMgt.Debug("DrawSelectCursor", "m_graphics is null");
+                return;
+            }
+
+            DrawElement element = GetDrawedElement(locX, locY);
+
+            if (null != element)
+            {
+                // Clear cursor
+
+                // Draw cursor
+                m_graphics.DrawRectangle(new Pen(selectCursorColor, 2), element.X, element.Y, element.Width, element.Height);
+                
+                m_realGraphics.DrawImage(bmp, 0, 0);
+            }
+        }
+
+        private void clearCanvas()
+        {
+            if (null != m_graphics)
+            {
+                m_graphics.Clear(Color.DarkGray);
+                m_elementList.Clear();
+            }
+        }
+
+        public void clearAll()
+        {
+            if (null != m_graphics && null != m_realGraphics && null != bmp)
+            {
+                m_realGraphics.Clear(Color.DarkGray);
+                m_graphics.Clear(Color.DarkGray);
+                m_elementList.Clear();
+                bmp.Dispose();
+            }
         }
     }
 }

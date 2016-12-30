@@ -220,7 +220,7 @@ namespace EOS
 
             Console.WriteLine(node.FullPath);
 
-            m_graphics.Clear(Color.White);
+            m_graphics.Clear(Color.DarkGray);
 
             Image img = Image.FromFile(ProjMgt.GetInstance().GetProjectResLoc() + "\\" + node.FullPath);
 
@@ -232,7 +232,7 @@ namespace EOS
             int locX = (m_panelSize.Width - img.Width) / 2;
             int locY = (m_panelSize.Height - img.Height) / 2;
 
-            m_graphics.FillRectangle(new SolidBrush(Color.White), locX, locY, img.Width, img.Height);
+            m_graphics.FillRectangle(new SolidBrush(Color.DarkGray), locX, locY, img.Width, img.Height);
             m_graphics.DrawImage(img, locX, locY, img.Width, img.Height);
 
             m_graphics.Save();
@@ -382,16 +382,20 @@ namespace EOS
 
             WgtItemOutline item = WgtData.GetWgtItemOutlineByTitle(nrd.Key);
 
-            if (null != item)
+            if (null != item && null != tnj)
             {
                 int iLocX = iParentLocX;
                 int iLocY = iParentLocY;
 
-                if (null != tnj)
-                {
-                    iLocX += Int32.Parse(tnj.X);
-                    iLocY += Int32.Parse(tnj.Y);
-                }
+                int iTmpX = 0;
+                int iTmpY = 0;
+
+                /* Check location */
+                int.TryParse(tnj.X, out iTmpX);
+                int.TryParse(tnj.Y, out iTmpY);
+       
+                iLocX += iTmpX;
+                iLocY += iTmpY;
 
                 if (CfgWgt.WgtType.BITMAP_IMG == item.Type)
                 {
@@ -468,20 +472,23 @@ namespace EOS
 
         public string GetDrawedElementTitle(int iX, int iY)
         {
+            LogMgt.Debug("GetDrawedElementTitle", "");
+
             string strTitle = null;
             int iWidth = 0;
             int iHeight = 0;
 
             DrawElement tmpDe = null;
 
-            if (null == m_elementList)
+            if (null == m_elementList || 0 >= m_elementList.Count)
             {
+                LogMgt.Debug("GetDrawedElementTitle", "Null");
                 return null;
             }
 
             foreach (DrawElement de in m_elementList)
             {
-                if (de.OnElement(iX, iY))
+                if (null != de && de.OnElement(iX, iY))
                 {
                     if ( 0 == iWidth && 0 == iHeight)
                     {
@@ -501,8 +508,9 @@ namespace EOS
             if (null != tmpDe)
             {
                 strTitle = tmpDe.Title;
+                LogMgt.Debug("GetDrawedElementTitle", strTitle);
             }
-            //Console.WriteLine(strTitle);
+
             return strTitle;
         }
 

@@ -131,5 +131,10 @@ namespace EOS
             e.Graphics.DrawString(wgtTypeTabControl.TabPages[0].Text, new Font("宋体", 10), txtColor, rec, sf);
         }
          * */
+
+        private void initDisplay()
+        {
+ 
+        }
     }
 }

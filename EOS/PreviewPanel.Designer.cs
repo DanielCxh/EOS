@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 442);
             this.Name = "PreviewPanel";
-            this.Text = "PreviewPanel";
+            this.Text = "Preview";
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PreviewPanel_MouseClick);
             this.ResumeLayout(false);
 

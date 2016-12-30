@@ -14,6 +14,9 @@ namespace EOS
 {
     class Common
     {
+        const string STR_LOWERCASE_TRUE = "true";
+        const string STR_LOWERCASE_FALSE = "false";
+
         /// <summary>
         ///  Get the content of the file by full file path.
         /// </summary>
@@ -118,6 +121,40 @@ namespace EOS
         public static bool StrSameVal()
         {
             bool bRst = false;
+            return bRst;
+        }
+
+        public static bool StrIsTrue(string str)
+        {
+            bool bRst = false;
+
+            if (IsStrEmpty(str))
+            {
+                return false;
+            }
+
+            if (0 == str.ToLower().CompareTo(STR_LOWERCASE_TRUE))
+            {
+                bRst = true;
+            }
+
+            return bRst;
+        }
+
+        public static bool StrIsFalse(string str)
+        {
+            bool bRst = false;
+
+            if (IsStrEmpty(str))
+            {
+                return false;
+            }
+
+            if (0 == str.ToLower().CompareTo(STR_LOWERCASE_FALSE))
+            {
+                bRst = true;
+            }
+
             return bRst;
         }
     }

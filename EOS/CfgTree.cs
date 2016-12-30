@@ -27,6 +27,9 @@ namespace EOS
         [JsonProperty(PropertyName = "id")]
         public string ID { get; set; }
 
+        [JsonProperty(PropertyName = "static_compiled")]
+        public string StaticCompiled { get; set; }
+
         [JsonProperty(PropertyName = "loc_x")]
         public string X { get; set; }
 
@@ -102,6 +105,20 @@ namespace EOS
             }
 
             return bRst;
+        }
+
+        public static TreeNodeJson GetTreeNodeContent(TreeNode node)
+        {
+            TreeNodeJson tnj = null;
+
+            if (null == node || Common.IsStrEmpty(node.Text.ToString()))
+            {
+                return null;
+            }
+
+            tnj = TreeData.GetTreeNode(node.Text);
+
+            return tnj;
         }
     }
 }

@@ -198,7 +198,6 @@ namespace EOS
                     if (null != nrd)
                     {
                         m_TreeNodeResDataGroup.Add(nrd);
-                        LogMgt.Debug("TreeData.SyncTreeFile", "Loaded :" + key);
                     }
                     else
                     {
@@ -244,6 +243,16 @@ namespace EOS
         public static NodeResData AnalyzeTreeNodeRes(string strItemName, string[] strRes)
         {
             NodeResData nrd = new NodeResData();
+
+            /* No resource info */
+            if (null == strRes || 0 >= strRes.Length)
+            {
+                nrd.Key = null;
+                nrd.ResFile = null;
+                nrd.Title = strItemName;
+
+                return nrd;
+            }
 
             string str = strRes[0];
 
@@ -312,12 +321,13 @@ namespace EOS
 
         public static TreeNodeJson GetTreeNode(string strTitle)
         {
-            LogMgt.Debug("TreeData.GetTreeNode", "");
+            LogMgt.Debug("TreeData.GetTreeNode", strTitle);
 
             TreeNodeJson node = null;
 
             if (Common.IsStrEmpty(strTitle))
             {
+                LogMgt.Debug("TreeData.GetTreeNode", "Null");
                 return null;
             }
 
@@ -325,12 +335,15 @@ namespace EOS
             {
                 foreach (TreeFile tf in m_TreeFileGroup)
                 {
-                    TreeNodeJson tnj = tf.GetTreeNodeByKey(strTitle);
-
-                    if (null != tnj)
+                    if (null != tf)
                     {
-                        node = tnj;
-                        return node;
+                        TreeNodeJson tnj = tf.GetTreeNodeByKey(strTitle);
+
+                        if (null != tnj)
+                        {
+                            node = tnj;
+                            return node;
+                        }
                     }
                 }
             }

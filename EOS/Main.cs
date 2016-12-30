@@ -415,7 +415,15 @@ namespace EOS
                 string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
                 m_movedTreeNode = TreeData.GetTreeNode(strName);
 
+                if (null == m_movedTreeNode)
+                {
+                    LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "m_movedTreeNode is null");
+                    return;
+                }
+
                 TreeNode tn = ProjMgt.GetInstance().GetTreeNodeByTitle(null, m_movedTreeNode.Title);
+
+                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", strName);
 
                 if (null != tn)
                 {
@@ -464,7 +472,7 @@ namespace EOS
 
             selectTreeNode = TreeData.GetTreeNode(node.Text);
 
-            tp = new TreeProperty();
+            tp = new TreeProperty(m_crtNode);
             tp.TopLevel = false;
             tp.Width = SplitContainerDetail.Panel2.Width - 16;
 

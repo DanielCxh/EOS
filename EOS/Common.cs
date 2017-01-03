@@ -7,7 +7,7 @@ using System.IO;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Drawing;
 
 
 namespace EOS
@@ -17,6 +17,29 @@ namespace EOS
         const string STR_LOWERCASE_TRUE = "true";
         const string STR_LOWERCASE_FALSE = "false";
 
+        /* ----------------------------------------------------------------------
+         * Key worlds
+         * 
+         * 
+         * ---------------------------------------------------------------------- */
+        const string STR_KEYWORLD_TAKE_FOCUS = "take_focus";
+        const string STR_KEYWORLD_ID = "id";
+
+        public static KeywordColor[] HeightLightKeys = new KeywordColor[] { new KeywordColor("file_name", Color.Blue),
+                                                                            new KeywordColor("width", Color.Blue),
+                                                                            new KeywordColor("height", Color.Blue),
+                                                                            new KeywordColor("format", Color.Blue),
+                                                                            new KeywordColor("compress", Color.Blue),
+
+                                                                             new KeywordColor("null", Color.Red)
+        };
+
+
+        public Common()
+        {
+            
+        }
+        
         /// <summary>
         ///  Get the content of the file by full file path.
         /// </summary>

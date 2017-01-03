@@ -59,6 +59,7 @@
     <Compile Include="CfgWgt.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="DrawMgt.cs" />
+    <Compile Include="KeywordColor.cs" />
     <Compile Include="LogMgt.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

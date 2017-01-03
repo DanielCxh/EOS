@@ -51,10 +51,14 @@
             this.ProjectTree = new System.Windows.Forms.TreeView();
             this.ProjTreeImgList = new System.Windows.Forms.ImageList(this.components);
             this.SplitContainerDetail = new System.Windows.Forms.SplitContainer();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
+            this.tabPageDesign = new System.Windows.Forms.TabPage();
+            this.tabPageEdit = new System.Windows.Forms.TabPage();
             this.FreePanel = new System.Windows.Forms.Panel();
             this.contextMenuDrawPanel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.richTextBoxEdit = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CloseImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResizeImg)).BeginInit();
@@ -64,7 +68,10 @@
             this.SplitContainerFull.Panel2.SuspendLayout();
             this.SplitContainerFull.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).BeginInit();
+            this.SplitContainerDetail.Panel1.SuspendLayout();
             this.SplitContainerDetail.SuspendLayout();
+            this.tabControlMain.SuspendLayout();
+            this.tabPageEdit.SuspendLayout();
             this.contextMenuDrawPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -289,12 +296,7 @@
             // SplitContainerDetail.Panel1
             // 
             this.SplitContainerDetail.Panel1.BackColor = System.Drawing.Color.DimGray;
-            this.SplitContainerDetail.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.SplitContainerDetail_Panel1_Paint);
-            this.SplitContainerDetail.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseClick);
-            this.SplitContainerDetail.Panel1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseDoubleClick);
-            this.SplitContainerDetail.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseDown);
-            this.SplitContainerDetail.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseMove);
-            this.SplitContainerDetail.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SplitContainerDetail_Panel1_MouseUp);
+            this.SplitContainerDetail.Panel1.Controls.Add(this.tabControlMain);
             // 
             // SplitContainerDetail.Panel2
             // 
@@ -304,6 +306,46 @@
             this.SplitContainerDetail.Size = new System.Drawing.Size(530, 400);
             this.SplitContainerDetail.SplitterDistance = 300;
             this.SplitContainerDetail.TabIndex = 0;
+            // 
+            // tabControlMain
+            // 
+            this.tabControlMain.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.tabControlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlMain.Controls.Add(this.tabPageDesign);
+            this.tabControlMain.Controls.Add(this.tabPageEdit);
+            this.tabControlMain.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(300, 400);
+            this.tabControlMain.TabIndex = 0;
+            // 
+            // tabPageDesign
+            // 
+            this.tabPageDesign.Location = new System.Drawing.Point(4, 4);
+            this.tabPageDesign.Name = "tabPageDesign";
+            this.tabPageDesign.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDesign.Size = new System.Drawing.Size(292, 374);
+            this.tabPageDesign.TabIndex = 0;
+            this.tabPageDesign.Text = "Design";
+            this.tabPageDesign.UseVisualStyleBackColor = true;
+            this.tabPageDesign.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPageDesign_Paint);
+            this.tabPageDesign.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabPageDesign_MouseDoubleClick);
+            this.tabPageDesign.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabPageDesign_MouseDown);
+            this.tabPageDesign.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPageDesign_MouseMove);
+            this.tabPageDesign.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tabPageDesign_MouseUp);
+            // 
+            // tabPageEdit
+            // 
+            this.tabPageEdit.Controls.Add(this.richTextBoxEdit);
+            this.tabPageEdit.Location = new System.Drawing.Point(4, 4);
+            this.tabPageEdit.Name = "tabPageEdit";
+            this.tabPageEdit.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageEdit.Size = new System.Drawing.Size(292, 374);
+            this.tabPageEdit.TabIndex = 1;
+            this.tabPageEdit.Text = "Edit";
+            this.tabPageEdit.UseVisualStyleBackColor = true;
             // 
             // FreePanel
             // 
@@ -329,6 +371,20 @@
             // 
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
+            // 
+            // richTextBoxEdit
+            // 
+            this.richTextBoxEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxEdit.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxEdit.Location = new System.Drawing.Point(0, 3);
+            this.richTextBoxEdit.Name = "richTextBoxEdit";
+            this.richTextBoxEdit.Size = new System.Drawing.Size(292, 368);
+            this.richTextBoxEdit.TabIndex = 0;
+            this.richTextBoxEdit.Text = "";
+            this.richTextBoxEdit.TextChanged += new System.EventHandler(this.richTextBoxEdit_TextChanged);
+            this.richTextBoxEdit.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBoxEdit_KeyUp);
             // 
             // Main
             // 
@@ -363,8 +419,11 @@
             this.SplitContainerFull.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainerFull)).EndInit();
             this.SplitContainerFull.ResumeLayout(false);
+            this.SplitContainerDetail.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainerDetail)).EndInit();
             this.SplitContainerDetail.ResumeLayout(false);
+            this.tabControlMain.ResumeLayout(false);
+            this.tabPageEdit.ResumeLayout(false);
             this.contextMenuDrawPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -398,5 +457,9 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuDrawPanel;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
+        private System.Windows.Forms.TabControl tabControlMain;
+        private System.Windows.Forms.TabPage tabPageDesign;
+        private System.Windows.Forms.TabPage tabPageEdit;
+        private System.Windows.Forms.RichTextBox richTextBoxEdit;
     }
 }

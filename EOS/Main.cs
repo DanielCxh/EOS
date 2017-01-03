@@ -66,7 +66,7 @@ namespace EOS
 
         private void Main_Load(object sender, EventArgs e)
         {
-            this.Text = "LLLL";
+            this.Text = "EOS";
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
@@ -206,7 +206,7 @@ namespace EOS
 
             if (e.Node.FullPath.EndsWith(".png") || e.Node.FullPath.EndsWith(".jpg"))
             {
-                detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+                detailPanel = new DrawMgt(tabPageDesign);
                 detailPanel.DrawNode(e.Node);
                 m_crtNode = e.Node;
 
@@ -222,11 +222,11 @@ namespace EOS
             {
                 LogMgt.Debug("Main.ProjectTree_NodeMouseDoubleClick", "Is wgt node.");
 
-                 detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
-                 detailPanel.DrawNode(e.Node);
-                 m_crtNode = e.Node;
+                detailPanel = new DrawMgt(tabPageDesign);
+                detailPanel.DrawNode(e.Node);
+                m_crtNode = e.Node;
 
-                 showWgtPropertyPanel = true;
+                showWgtPropertyPanel = true;
             }
             else if (ProjMgt.NodeDetailType.NT_TREE_ITEM == ProjMgt.GetNoteDetailType(e.Node))
             {
@@ -337,23 +337,44 @@ namespace EOS
             }
         }
 
-        private void SplitContainerDetail_Panel1_Paint(object sender, PaintEventArgs e)
+        private void previewSubMenuItem_Click(object sender, EventArgs e)
         {
             if (null != m_crtNode)
             {
-                detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+                LogMgt.Debug("previewSubMenuItem_Click", "Show preview panel.");
+
+                PreviewPanel panel = new PreviewPanel();
+
+                DrawMgt dm = new DrawMgt(panel);
+
+                panel.Show();
+
+                /* Need show panel first than draw graphic */
+                dm.DrawNode(m_crtNode);
+            }
+            else 
+            {
+                LogMgt.Debug("previewSubMenuItem_Click", "Current tree node is null.");
+            }
+        }
+
+        /* ---------------------------------------------------------------------------
+         * Main design panel
+         * 
+         * --------------------------------------------------------------------------- */
+
+        private void tabPageDesign_Paint(object sender, PaintEventArgs e)
+        {
+            if (null != m_crtNode)
+            {
+                detailPanel = new DrawMgt(tabPageDesign);
                 detailPanel.DrawNode(m_crtNode);
             }
         }
 
-        private void SplitContainerDetail_Panel1_MouseClick(object sender, MouseEventArgs e)
+        private void tabPageDesign_MouseDown(object sender, MouseEventArgs e)
         {
-            
-        }
-
-        private void SplitContainerDetail_Panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && null != detailPanel)
             {
                 //string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
 
@@ -361,7 +382,7 @@ namespace EOS
 
                 m_iCanvasBaseX = e.X;
                 m_iCanvasBaseY = e.Y;
-                
+
 
                 string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
                 m_movedTreeNode = TreeData.GetTreeNode(strName);
@@ -378,18 +399,12 @@ namespace EOS
             {
                 Console.WriteLine(e.X + ":" + e.Y);
                 //contextMenuDraw.Show();
-                SplitContainerDetail.Panel1.ContextMenuStrip = contextMenuDrawPanel;
+                tabPageDesign.ContextMenuStrip = contextMenuDrawPanel;
 
             }
         }
 
-        private void SplitContainerDetail_Panel1_MouseUp(object sender, MouseEventArgs e)
-        {
-            m_bCanvasMouseDown = false;
-            m_movedTreeNode = null;
-        }
-
-        private void SplitContainerDetail_Panel1_MouseMove(object sender, MouseEventArgs e)
+        private void tabPageDesign_MouseMove(object sender, MouseEventArgs e)
         {
             if (true == m_bCanvasMouseDown && null != m_movedTreeNode)
             {
@@ -406,24 +421,28 @@ namespace EOS
             }
         }
 
-        private void SplitContainerDetail_Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void tabPageDesign_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            m_bCanvasMouseDown = false;
+            m_movedTreeNode = null;
+        }
+
+        private void tabPageDesign_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && null != detailPanel)
             {
-                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "");
+                LogMgt.Debug("tabPageDesign_MouseDoubleClick", "");
 
                 string strName = detailPanel.GetDrawedElementTitle(e.X, e.Y);
                 m_movedTreeNode = TreeData.GetTreeNode(strName);
 
                 if (null == m_movedTreeNode)
                 {
-                    LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "m_movedTreeNode is null");
+                    LogMgt.Debug("tabPageDesign_MouseDoubleClick", "m_movedTreeNode is null");
                     return;
                 }
 
                 TreeNode tn = ProjMgt.GetInstance().GetTreeNodeByTitle(null, m_movedTreeNode.Title);
-
-                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", strName);
 
                 if (null != tn)
                 {
@@ -432,28 +451,66 @@ namespace EOS
             }
         }
 
-        private void previewSubMenuItem_Click(object sender, EventArgs e)
+        /* ---------------------------------------------------------------------------
+         * Rich text edit box
+         * 
+         * --------------------------------------------------------------------------- */
+
+        private void richTextBoxEdit_KeyUp(object sender, KeyEventArgs e)
         {
-            if (null != m_crtNode)
-            {
-                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "Show preview panel.");
-
-                PreviewPanel panel = new PreviewPanel();
-
-                DrawMgt dm = new DrawMgt(panel);
-
-                panel.Show();
-
-                /* Need show panel first than draw graphic */
-                dm.DrawNode(m_crtNode);
-            }
-            else 
-            {
-                LogMgt.Debug("SplitContainerDetail_Panel1_MouseDoubleClick", "Current tree node is null.");
-            }
+           
         }
 
-        /*************************************************************************/
+        private void richTextBoxEdit_TextChanged(object sender, EventArgs e)
+        {
+            richTextBoxEdit.Select(0, richTextBoxEdit.Text.Length);
+            richTextBoxEdit.SelectionFont = new Font("Microsoft Yahei", 10, (FontStyle.Regular));
+            richTextBoxEdit.SelectionColor = Color.Black;
+
+            string find = "id";
+
+            for (int i = 0; i < Common.HeightLightKeys.Length; i++)
+            {
+                find = Common.HeightLightKeys[i].Keyword;
+
+                if (false == Common.IsStrEmpty(find) && false == Common.IsStrEmpty(richTextBoxEdit.Text))
+                {
+                    int index = richTextBoxEdit.Find(find, RichTextBoxFinds.WholeWord);
+
+                    int startPos = index;
+                    int nextIndex = -1;
+
+                    LogMgt.Debug("richTextBoxEdit_KeyUp", startPos.ToString());
+
+                    while (nextIndex != startPos && 0 <= startPos)
+                    {
+                        richTextBoxEdit.SelectionStart = index;
+                        richTextBoxEdit.SelectionLength = find.Length;
+                        richTextBoxEdit.SelectionColor = Common.HeightLightKeys[i].KColor;
+                        richTextBoxEdit.SelectionFont = new Font("Microsoft Yahei", (float)10, FontStyle.Regular);
+                        //richTextBoxEdit.Focus();
+
+                        nextIndex = richTextBoxEdit.Find(find, index + find.Length, RichTextBoxFinds.WholeWord);
+                        if (nextIndex == -1)
+                        {
+                            nextIndex = startPos;
+                        }
+
+                        index = nextIndex;
+                    }
+                }
+            }
+
+            /* Revert font */
+            richTextBoxEdit.Select(richTextBoxEdit.Text.Length, 0);
+            richTextBoxEdit.SelectionFont = new Font("宋体", 10, (FontStyle.Regular));
+            richTextBoxEdit.SelectionColor = Color.Black;
+        }
+
+        /* ---------------------------------------------------------------------------
+         * Private functions
+         * 
+         * --------------------------------------------------------------------------- */
 
         private void onShowTreeNode(TreeNode node)
         {
@@ -464,7 +521,7 @@ namespace EOS
                 detailPanel.clearAll();
             }
 
-            detailPanel = new DrawMgt(SplitContainerDetail.Panel1);
+            detailPanel = new DrawMgt(tabPageDesign);
             detailPanel.DrawNode(node);
             m_crtNode = node;
 
@@ -481,5 +538,8 @@ namespace EOS
 
             tp.Show();
         }
+
+
+      
     }
 }
